@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Download History - B2B Lead Generator
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        /* ==========================================
+           DOWNLOAD HISTORY
+        ========================================== */
+
+        .history-page {
+            padding: 28px;
+        }
+
+
+        .history-section {
+            background: #ffffff;
+
+            border: 1px solid #e5eaf1;
+
+            border-radius: 18px;
+
+            padding: 26px;
+
+            box-shadow:
+                0 8px 28px rgba(
+                    24,
+                    39,
+                    75,
+                    0.04
+                );
+        }
+
+
+        .history-table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+
+            margin-top: 24px;
+
+            border: 1px solid #edf0f4;
+
+            border-radius: 12px;
+        }
+
+
+        .history-table {
+            width: 100%;
+
+            min-width: 700px;
+
+            border-collapse: collapse;
+        }
+
+
+        .history-table th,
+        .history-table td {
+
+            padding: 15px;
+
+            text-align: left;
+
+            border-bottom: 1px solid #edf0f4;
+
+            font-size: 12px;
+        }
+
+
+        .history-table th {
+
+            background: #f7f9fc;
+
+            color: #68768b;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            white-space: nowrap;
+        }
+
+
+        .history-table td {
+            color: #526176;
+        }
+
+
+        .history-table tbody tr:hover {
+            background: #fafbfd;
+        }
+
+
+        .format-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+
+        .format-csv {
+
+            background: #edf4ff;
+
+            color: #3268ed;
+        }
+
+
+        .format-excel {
+
+            background: #eaf8f0;
+
+            color: #1f9d68;
+        }
+
+
+        .empty-history {
+
+            padding: 50px !important;
+
+            text-align: center !important;
+
+            color: #98a4b5;
+        }
+
+
+        @media (max-width: 700px) {
+
+            .history-page {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app-shell">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+                B2B
+            </div>
+
+
+            <div class="sidebar-title">
+
+                <strong>
+                    LeadGen
+                </strong>
+
+                <span>
+                    Business Intelligence
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+
+            <!-- HOME -->
+
+            <a
+                href="/"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Home
+                </span>
+
+            </a>
+
+
+            <!-- SAVED LEADS -->
+
+            <a
+                href="/saved-leads"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ♡
+                </span>
+
+                <span>
+                    Saved Leads
+                </span>
+
+            </a>
+
+
+            <!-- ANALYTICS -->
+
+            <a
+                href="/analytics"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ◫
+                </span>
+
+                <span>
+                    Analytics
+                </span>
+
+            </a>
+
+
+            <!-- DOWNLOAD HISTORY -->
+
+            <a
+                href="/download-history"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    ↓
+                </span>
+
+                <span>
+                    Download History
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- ======================================
+             BOTTOM
+        ======================================= -->
+
+        <div class="sidebar-bottom">
+
+
+            <!-- SETTINGS -->
+
+            <a
+                href="/settings"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+
+            <!-- SYSTEM STATUS -->
+
+            <div class="sidebar-status">
+
+                <span class="status-dot"></span>
+
+                <div>
+
+                    <strong>
+                        System Online
+                    </strong>
+
+                    <span>
+                        All services operational
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =========================================
+             HEADER
+        ========================================== -->
+
+        <header class="top-header">
+
+
+            <div class="brand-section">
+
+                <div class="brand-icon">
+                    B2B
+                </div>
+
+
+                <div>
+
+                    <h1>
+                        Download History
+                    </h1>
+
+                    <p>
+                        Track your recent lead exports
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-status">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    Activity History
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             PAGE CONTENT
+        ========================================== -->
+
+        <section class="history-page">
+
+
+            <div class="history-section">
+
+
+                <!-- ==================================
+                     HEADING
+                ================================== -->
+
+                <div class="results-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            EXPORT ACTIVITY
+                        </span>
+
+                        <h2>
+                            Download History
+                        </h2>
+
+                        <p>
+                            Recent CSV and Excel exports.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     TABLE
+                ================================== -->
+
+                <div class="history-table-wrapper">
+
+                    <table class="history-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Date & Time
+                                </th>
+
+                                <th>
+                                    Search
+                                </th>
+
+                                <th>
+                                    City
+                                </th>
+
+                                <th>
+                                    Leads
+                                </th>
+
+                                <th>
+                                    Format
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="historyTableBody">
+
+
+                            <tr>
+
+                                <td
+                                    colspan="5"
+                                    class="empty-history"
+                                >
+                                    Loading history...
+                                </td>
+
+                            </tr>
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- ==========================================
+     DOWNLOAD HISTORY SCRIPT
+========================================== -->
+
+<script>
+
+async function loadDownloadHistory() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/download-history-data"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load download history."
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const tableBody =
+            document.getElementById(
+                "historyTableBody"
+            );
+
+
+        tableBody.innerHTML = "";
+
+
+        if (
+            !data.success ||
+            !data.history ||
+            data.history.length === 0
+        ) {
+
+            tableBody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="empty-history"
+                    >
+                        No downloads yet.
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+        }
+
+
+        data.history.forEach(
+            function (item) {
+
+                const row =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                const formatClass =
+                    item.file_type === "Excel"
+                    ? "format-excel"
+                    : "format-csv";
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${item.downloaded_at || "-"}
+                    </td>
+
+                    <td>
+                        ${item.keyword || "-"}
+                    </td>
+
+                    <td>
+                        ${item.city || "-"}
+                    </td>
+
+                    <td>
+                        ${item.lead_count || 0}
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="format-badge ${formatClass}"
+                        >
+                            ${item.file_type || "-"}
+                        </span>
+
+                    </td>
+
+                `;
+
+
+                tableBody.appendChild(
+                    row
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "History loading error:",
+            error
+        );
+
+
+        document.getElementById(
+            "historyTableBody"
+        ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="empty-history"
+                >
+                    Unable to load download history.
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// INITIAL LOAD
+// ==========================================
+
+loadDownloadHistory();
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Saved Leads - B2B Lead Generator</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        /* ==========================================
+           SAVED LEADS PAGE
+        ========================================== */
+
+        .saved-page {
+            padding: 28px;
+        }
+
+        .saved-card {
+            background: #ffffff;
+            border: 1px solid #e7ebf1;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 8px 28px rgba(24, 39, 75, 0.04);
+        }
+
+        .saved-card .results-heading {
+            margin-bottom: 24px;
+        }
+
+        .saved-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #edf0f4;
+            border-radius: 12px;
+        }
+
+        .saved-table-wrap table {
+            min-width: 1250px;
+        }
+
+        .saved-table-wrap th {
+            white-space: nowrap;
+        }
+
+        .saved-table-wrap td {
+            white-space: nowrap;
+        }
+
+        .saved-empty {
+            text-align: center;
+            padding: 50px !important;
+            color: #98a4b5;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="app-shell">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+                B2B
+            </div>
+
+            <div class="sidebar-title">
+
+                <strong>
+                    LeadGen
+                </strong>
+
+                <span>
+                    Business Intelligence
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+
+            <!-- HOME -->
+
+            <a
+                href="/"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Home
+                </span>
+
+            </a>
+
+
+            <!-- SAVED LEADS -->
+
+            <a
+                href="/saved-leads"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    ♡
+                </span>
+
+                <span>
+                    Saved Leads
+                </span>
+
+            </a>
+
+
+            <!-- ANALYTICS -->
+
+            <a
+                href="/analytics"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ◫
+                </span>
+
+                <span>
+                    Analytics
+                </span>
+
+            </a>
+
+
+            <!-- DOWNLOAD HISTORY -->
+
+            <a
+                href="/download-history"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ↓
+                </span>
+
+                <span>
+                    Download History
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+
+            <!-- SETTINGS -->
+
+            <a
+                href="/settings"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+
+            <!-- SYSTEM STATUS -->
+
+            <div class="sidebar-status">
+
+                <span class="status-dot"></span>
+
+                <div>
+
+                    <strong>
+                        System Online
+                    </strong>
+
+                    <span>
+                        All services operational
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =========================================
+             HEADER
+        ========================================== -->
+
+        <header class="top-header">
+
+
+            <div class="brand-section">
+
+                <div class="brand-icon">
+                    B2B
+                </div>
+
+                <div>
+
+                    <h1>
+                        Saved Leads
+                    </h1>
+
+                    <p>
+                        Your saved business leads
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-status">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    Database Connected
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             SAVED LEADS CONTENT
+        ========================================== -->
+
+        <section class="saved-page">
+
+
+            <div class="saved-card">
+
+
+                <!-- ==================================
+                     HEADING
+                ================================== -->
+
+                <div class="results-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            DATABASE
+                        </span>
+
+                        <h2>
+                            Saved Leads
+                        </h2>
+
+                        <p>
+                            All previously saved business records.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        id="savedLeadCount"
+                        class="lead-count"
+                    >
+                        0 Leads
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     TOOLBAR
+                ================================== -->
+
+                <div class="toolbar">
+
+
+                    <div class="filter-controls">
+
+
+                        <!-- SEARCH -->
+
+                        <div class="filter-search">
+
+                            <span>
+                                ⌕
+                            </span>
+
+                            <input
+                                type="text"
+                                id="savedLeadSearch"
+                                placeholder="Search saved businesses..."
+                            >
+
+                        </div>
+
+
+                        <!-- RELIABILITY -->
+
+                        <select
+                            id="savedReliabilityFilter"
+                        >
+
+                            <option value="">
+                                All Reliability
+                            </option>
+
+                            <option value="HIGH">
+                                High
+                            </option>
+
+                            <option value="MEDIUM">
+                                Medium
+                            </option>
+
+                            <option value="LOW">
+                                Low
+                            </option>
+
+                        </select>
+
+
+                        <!-- CLEAR -->
+
+                        <button
+                            type="button"
+                            id="clearSavedFilters"
+                            class="secondary-btn"
+                        >
+                            Clear
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- EXPORT -->
+
+                    <div class="export-buttons">
+
+
+                        <button
+                            type="button"
+                            id="savedExportCsv"
+                            class="export-btn csv-btn"
+                        >
+                            ↓ CSV
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="savedExportExcel"
+                            class="export-btn excel-btn"
+                        >
+                            ↓ Excel
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     TABLE
+                ================================== -->
+
+                <div class="saved-table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Business
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Address
+                                </th>
+
+                                <th>
+                                    City
+                                </th>
+
+                                <th>
+                                    Pincode
+                                </th>
+
+                                <th>
+                                    Phone
+                                </th>
+
+                                <th>
+                                    Website
+                                </th>
+
+                                <th>
+                                    Email
+                                </th>
+
+                                <th>
+                                    Rating
+                                </th>
+
+                                <th>
+                                    Reviews
+                                </th>
+
+                                <th>
+                                    Reliability
+                                </th>
+
+                                <th>
+                                    Missing Info
+                                </th>
+
+                                <th>
+                                    Google Maps
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="savedLeadTableBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script>
+
+let savedLeads = [];
+
+
+// ==========================================
+// LOAD SAVED LEADS
+// ==========================================
+
+async function loadSavedLeads() {
+
+    try {
+
+        const response =
+            await fetch("/leads");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load saved leads."
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            alert(
+                data.message ||
+                "Unable to load saved leads."
+            );
+
+            return;
+
+        }
+
+
+        savedLeads =
+            data.leads || [];
+
+
+        displaySavedLeads(
+            savedLeads
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Saved leads error:",
+            error
+        );
+
+
+        alert(
+            "Unable to load saved leads."
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// DISPLAY SAVED LEADS
+// ==========================================
+
+function displaySavedLeads(leads) {
+
+    const tableBody =
+        document.getElementById(
+            "savedLeadTableBody"
+        );
+
+
+    tableBody.innerHTML = "";
+
+
+    document.getElementById(
+        "savedLeadCount"
+    ).innerText =
+        leads.length + " Leads";
+
+
+    // ======================================
+    // EMPTY STATE
+    // ======================================
+
+    if (!leads.length) {
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td
+                colspan="13"
+                class="saved-empty"
+            >
+                No saved leads found.
+            </td>
+
+        `;
+
+
+        tableBody.appendChild(
+            row
+        );
+
+
+        return;
+
+    }
+
+
+    // ======================================
+    // CREATE ROWS
+    // ======================================
+
+    leads.forEach(
+        function (lead) {
+
+            const row =
+                document.createElement("tr");
+
+
+            // ==================================
+            // HIGH RELIABILITY
+            // ==================================
+
+            if (
+                lead.reliability_status ===
+                "HIGH"
+            ) {
+
+                row.classList.add(
+                    "high-reliability-row"
+                );
+
+            }
+
+
+            // ==================================
+            // RELIABILITY BADGE
+            // ==================================
+
+            let reliabilityHTML = "-";
+
+
+            if (
+                lead.reliability_score !==
+                undefined &&
+                lead.reliability_score !==
+                null
+            ) {
+
+                let badgeClass =
+                    "low";
+
+
+                if (
+                    lead.reliability_status ===
+                    "HIGH"
+                ) {
+
+                    badgeClass = "high";
+
+                }
+
+                else if (
+                    lead.reliability_status ===
+                    "MEDIUM"
+                ) {
+
+                    badgeClass = "medium";
+
+                }
+
+
+                reliabilityHTML = `
+
+                    <span
+                        class="reliability-badge ${badgeClass}"
+                    >
+
+                        ${lead.reliability_score}%
+
+                        <span class="reliability-label">
+                            ${lead.reliability_status || ""}
+                        </span>
+
+                    </span>
+
+                `;
+
+            }
+
+
+            // ==================================
+            // ROW
+            // ==================================
+
+            row.innerHTML = `
+
+                <td>
+                    ${lead.business_name || "-"}
+                </td>
+
+                <td>
+                    ${lead.category || "-"}
+                </td>
+
+                <td>
+                    ${lead.address || "-"}
+                </td>
+
+                <td>
+                    ${lead.city || "-"}
+                </td>
+
+                <td>
+                    ${lead.pincode || "-"}
+                </td>
+
+                <td>
+                    ${lead.phone || "-"}
+                </td>
+
+                <td>
+
+                    ${
+                        lead.website
+
+                        ?
+
+                        `<a
+                            href="${lead.website}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Visit
+                        </a>`
+
+                        :
+
+                        "-"
+                    }
+
+                </td>
+
+                <td>
+                    ${lead.email || "-"}
+                </td>
+
+                <td>
+                    ${lead.rating || "-"}
+                </td>
+
+                <td>
+                    ${lead.review_count || "-"}
+                </td>
+
+                <td>
+                    ${reliabilityHTML}
+                </td>
+
+                <td>
+
+                    ${
+                        lead.missing_information &&
+                        lead.missing_information !== "None"
+
+                        ?
+
+                        lead.missing_information
+
+                        :
+
+                        `<span class="complete-info">
+                            Complete
+                        </span>`
+                    }
+
+                </td>
+
+                <td>
+
+                    ${
+                        lead.google_maps_link
+
+                        ?
+
+                        `<a
+                            href="${lead.google_maps_link}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            View Map
+                        </a>`
+
+                        :
+
+                        "-"
+                    }
+
+                </td>
+
+            `;
+
+
+            tableBody.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// FILTER SAVED LEADS
+// ==========================================
+
+function filterSavedLeads() {
+
+    const searchText =
+        document
+            .getElementById(
+                "savedLeadSearch"
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const reliability =
+        document.getElementById(
+            "savedReliabilityFilter"
+        ).value;
+
+
+    const filtered =
+        savedLeads.filter(
+            function (lead) {
+
+                const businessName =
+                    (
+                        lead.business_name ||
+                        ""
+                    ).toLowerCase();
+
+
+                const matchesSearch =
+                    businessName.includes(
+                        searchText
+                    );
+
+
+                const matchesReliability =
+                    !reliability ||
+                    lead.reliability_status ===
+                    reliability;
+
+
+                return (
+                    matchesSearch &&
+                    matchesReliability
+                );
+
+            }
+        );
+
+
+    displaySavedLeads(
+        filtered
+    );
+
+}
+
+
+// ==========================================
+// SEARCH FILTER
+// ==========================================
+
+document
+    .getElementById(
+        "savedLeadSearch"
+    )
+    .addEventListener(
+        "input",
+        filterSavedLeads
+    );
+
+
+// ==========================================
+// RELIABILITY FILTER
+// ==========================================
+
+document
+    .getElementById(
+        "savedReliabilityFilter"
+    )
+    .addEventListener(
+        "change",
+        filterSavedLeads
+    );
+
+
+// ==========================================
+// CLEAR FILTERS
+// ==========================================
+
+document
+    .getElementById(
+        "clearSavedFilters"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            document.getElementById(
+                "savedLeadSearch"
+            ).value = "";
+
+
+            document.getElementById(
+                "savedReliabilityFilter"
+            ).value = "";
+
+
+            displaySavedLeads(
+                savedLeads
+            );
+
+        }
+    );
+
+
+// ==========================================
+// EXPORT CSV
+// ==========================================
+
+document
+    .getElementById(
+        "savedExportCsv"
+    )
+    .addEventListener(
+        "click",
+        async function () {
+
+            if (!savedLeads.length) {
+
+                alert(
+                    "No saved leads available."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/export/csv",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                leads: savedLeads,
+
+                                keyword:
+                                    "Saved Leads",
+
+                                city:
+                                    "All Cities"
+
+                            })
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "CSV export failed."
+                    );
+
+                }
+
+
+                const blob =
+                    await response.blob();
+
+
+                const url =
+                    window.URL.createObjectURL(
+                        blob
+                    );
+
+
+                const link =
+                    document.createElement(
+                        "a"
+                    );
+
+
+                link.href = url;
+
+                link.download =
+                    "saved_leads.csv";
+
+
+                document.body.appendChild(
+                    link
+                );
+
+
+                link.click();
+
+
+                link.remove();
+
+
+                window.URL.revokeObjectURL(
+                    url
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    "Unable to export CSV."
+                );
+
+            }
+
+        }
+    );
+
+
+// ==========================================
+// EXPORT EXCEL
+// ==========================================
+
+document
+    .getElementById(
+        "savedExportExcel"
+    )
+    .addEventListener(
+        "click",
+        async function () {
+
+            if (!savedLeads.length) {
+
+                alert(
+                    "No saved leads available."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/export/excel",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                leads: savedLeads,
+
+                                keyword:
+                                    "Saved Leads",
+
+                                city:
+                                    "All Cities"
+
+                            })
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Excel export failed."
+                    );
+
+                }
+
+
+                const blob =
+                    await response.blob();
+
+
+                const url =
+                    window.URL.createObjectURL(
+                        blob
+                    );
+
+
+                const link =
+                    document.createElement(
+                        "a"
+                    );
+
+
+                link.href = url;
+
+                link.download =
+                    "saved_leads.xlsx";
+
+
+                document.body.appendChild(
+                    link
+                );
+
+
+                link.click();
+
+
+                link.remove();
+
+
+                window.URL.revokeObjectURL(
+                    url
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    "Unable to export Excel."
+                );
+
+            }
+
+        }
+    );
+
+
+// ==========================================
+// INITIAL LOAD
+// ==========================================
+
+loadSavedLeads();
+
+</script>
+
+</body>
+
+</html>

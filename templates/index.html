@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>B2B Lead Generator</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="app-shell">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+                B2B
+            </div>
+
+            <div class="sidebar-title">
+
+                <strong>
+                    LeadGen
+                </strong>
+
+                <span>
+                    Business Intelligence
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             MAIN NAVIGATION
+        ======================================= -->
+
+        <nav class="sidebar-nav">
+
+
+            <!-- HOME -->
+
+            <a
+                href="/"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Home
+                </span>
+
+            </a>
+
+
+            <!-- SAVED LEADS -->
+
+            <a
+                href="/saved-leads"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ♡
+                </span>
+
+                <span>
+                    Saved Leads
+                </span>
+
+            </a>
+
+
+            <!-- ANALYTICS -->
+
+            <a
+                href="/analytics"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ◫
+                </span>
+
+                <span>
+                    Analytics
+                </span>
+
+            </a>
+
+
+            <!-- DOWNLOAD HISTORY -->
+
+            <a
+                href="/download-history"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ↓
+                </span>
+
+                <span>
+                    Download History
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- ======================================
+             BOTTOM SECTION
+        ======================================= -->
+
+        <div class="sidebar-bottom">
+
+
+            <!-- SETTINGS -->
+
+            <a
+                href="/settings"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+
+            <!-- SYSTEM STATUS -->
+
+            <div class="sidebar-status">
+
+                <span class="status-dot"></span>
+
+                <div>
+
+                    <strong>
+                        System Online
+                    </strong>
+
+                    <span>
+                        All services operational
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =========================================
+             HEADER
+        ========================================== -->
+
+        <header class="top-header">
+
+            <div class="brand-section">
+
+                <div class="brand-icon">
+                    B2B
+                </div>
+
+
+                <div>
+
+                    <h1>
+                        B2B Lead Generator
+                    </h1>
+
+                    <p>
+                        Find, enrich and manage business leads
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-status">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    Data Pipeline Active
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             SEARCH SECTION
+        ========================================== -->
+
+        <section class="search-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        LEAD DISCOVERY
+                    </span>
+
+                    <h2>
+                        Find Business Leads
+                    </h2>
+
+                    <p>
+                        Search businesses by industry and location.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form id="searchForm">
+
+                <div class="search-grid">
+
+
+                    <!-- BUSINESS / INDUSTRY -->
+
+                    <div class="input-group">
+
+                        <label for="keyword">
+                            Business / Industry
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ⌕
+                            </span>
+
+
+                            <input
+                                type="text"
+                                id="keyword"
+                                placeholder="e.g. Dentist, Gym, Restaurant"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- CITY / AREA -->
+
+                    <div class="input-group">
+
+                        <label for="city">
+                            City / Area
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ⌖
+                            </span>
+
+
+                            <input
+                                type="text"
+                                id="city"
+                                placeholder="e.g. Pune, Mumbai, Solapur"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- SEARCH BUTTON -->
+
+                    <button
+                        type="submit"
+                        id="searchButton"
+                        class="primary-search-btn"
+                    >
+
+                        <span>
+                            ⌕
+                        </span>
+
+                        <span>
+                            Search Leads
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =========================================
+             KPI CARDS
+        ========================================== -->
+
+        <section class="stats-grid">
+
+
+            <!-- TOTAL LEADS -->
+
+            <div class="stat-card">
+
+                <div class="stat-card-icon blue">
+                    ◉
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        Total Leads
+                    </span>
+
+                    <strong id="totalLeads">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- WEBSITES -->
+
+            <div class="stat-card">
+
+                <div class="stat-card-icon purple">
+                    ◫
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        Websites
+                    </span>
+
+                    <strong id="totalWebsites">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EMAILS -->
+
+            <div class="stat-card">
+
+                <div class="stat-card-icon orange">
+                    ✉
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        Emails
+                    </span>
+
+                    <strong id="totalEmails">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SOCIAL -->
+
+            <div class="stat-card">
+
+                <div class="stat-card-icon green">
+                    ✓
+                </div>
+
+
+                <div class="stat-content">
+
+                    <span>
+                        Social Profiles
+                    </span>
+
+                    <strong id="totalSocial">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             RESULTS
+        ========================================== -->
+
+        <section
+            id="results"
+            class="results-section"
+        >
+
+
+            <!-- RESULTS HEADING -->
+
+            <div class="results-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        RESULTS
+                    </span>
+
+
+                    <h2>
+                        Generated Leads
+                    </h2>
+
+
+                    <p>
+                        Enriched business information collected from public sources.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="leadCount"
+                    class="lead-count"
+                >
+                    0 Leads
+                </div>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 FILTER / ACTION BAR
+            ====================================== -->
+
+            <div class="toolbar">
+
+
+                <div class="filter-controls">
+
+
+                    <!-- SEARCH FILTER -->
+
+                    <div class="filter-search">
+
+                        <span>
+                            ⌕
+                        </span>
+
+
+                        <input
+                            type="text"
+                            id="leadSearch"
+                            placeholder="Search business..."
+                        >
+
+                    </div>
+
+
+
+                    <!-- CATEGORY FILTER -->
+
+                    <select id="categoryFilter">
+
+                        <option value="">
+                            All Categories
+                        </option>
+
+                    </select>
+
+
+
+                    <!-- CLEAR FILTER -->
+
+                    <button
+                        type="button"
+                        id="clearFilters"
+                        class="secondary-btn"
+                    >
+                        Clear Filters
+                    </button>
+
+                </div>
+
+
+
+                <!-- EXPORT BUTTONS -->
+
+                <div class="export-buttons">
+
+
+                    <button
+                        type="button"
+                        id="exportCsv"
+                        class="export-btn csv-btn"
+                    >
+
+                        ↓ CSV
+
+                    </button>
+
+
+
+                    <button
+                        type="button"
+                        id="exportExcel"
+                        class="export-btn excel-btn"
+                    >
+
+                        ↓ Excel
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 TABLE
+            ====================================== -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Business
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Address
+                            </th>
+
+                            <th>
+                                City
+                            </th>
+
+                            <th>
+                                Pincode
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Website
+                            </th>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th>
+                                Instagram
+                            </th>
+
+                            <th>
+                                Facebook
+                            </th>
+
+                            <th>
+                                LinkedIn
+                            </th>
+
+                            <th>
+                                Twitter / X
+                            </th>
+
+                            <th>
+                                Rating
+                            </th>
+
+                            <th>
+                                Reviews
+                            </th>
+
+                            <th>
+                                Reliability
+                            </th>
+
+                            <th>
+                                Missing Info
+                            </th>
+
+                            <th>
+                                Google Maps
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="leadTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+
+</body>
+
+</html>
