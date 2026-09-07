@@ -19,10 +19,6 @@
 
     <style>
 
-        /* ==========================================
-           SAVED LEADS PAGE
-        ========================================== */
-
         .saved-page {
             padding: 28px;
         }
@@ -68,20 +64,11 @@
 
 </head>
 
-
 <body>
 
 <div class="app-shell">
 
-
-    <!-- =========================================
-         SIDEBAR
-    ========================================== -->
-
     <aside class="sidebar">
-
-
-        <!-- BRAND -->
 
         <div class="sidebar-brand">
 
@@ -103,13 +90,7 @@
 
         </div>
 
-
-        <!-- NAVIGATION -->
-
         <nav class="sidebar-nav">
-
-
-            <!-- HOME -->
 
             <a
                 href="/"
@@ -126,9 +107,6 @@
 
             </a>
 
-
-            <!-- SAVED LEADS -->
-
             <a
                 href="/saved-leads"
                 class="nav-item active"
@@ -144,9 +122,6 @@
 
             </a>
 
-
-            <!-- ANALYTICS -->
-
             <a
                 href="/analytics"
                 class="nav-item"
@@ -161,9 +136,6 @@
                 </span>
 
             </a>
-
-
-            <!-- DOWNLOAD HISTORY -->
 
             <a
                 href="/download-history"
@@ -182,13 +154,7 @@
 
         </nav>
 
-
-        <!-- BOTTOM -->
-
         <div class="sidebar-bottom">
-
-
-            <!-- SETTINGS -->
 
             <a
                 href="/settings"
@@ -204,9 +170,6 @@
                 </span>
 
             </a>
-
-
-            <!-- SYSTEM STATUS -->
 
             <div class="sidebar-status">
 
@@ -230,21 +193,9 @@
 
     </aside>
 
-
-
-    <!-- =========================================
-         MAIN CONTENT
-    ========================================== -->
-
     <main class="main-content">
 
-
-        <!-- =========================================
-             HEADER
-        ========================================== -->
-
         <header class="top-header">
-
 
             <div class="brand-section">
 
@@ -266,7 +217,6 @@
 
             </div>
 
-
             <div class="header-status">
 
                 <span class="status-dot"></span>
@@ -279,21 +229,9 @@
 
         </header>
 
-
-
-        <!-- =========================================
-             SAVED LEADS CONTENT
-        ========================================== -->
-
         <section class="saved-page">
 
-
             <div class="saved-card">
-
-
-                <!-- ==================================
-                     HEADING
-                ================================== -->
 
                 <div class="results-heading">
 
@@ -313,7 +251,6 @@
 
                     </div>
 
-
                     <div
                         id="savedLeadCount"
                         class="lead-count"
@@ -323,19 +260,9 @@
 
                 </div>
 
-
-
-                <!-- ==================================
-                     TOOLBAR
-                ================================== -->
-
                 <div class="toolbar">
 
-
                     <div class="filter-controls">
-
-
-                        <!-- SEARCH -->
 
                         <div class="filter-search">
 
@@ -350,9 +277,6 @@
                             >
 
                         </div>
-
-
-                        <!-- RELIABILITY -->
 
                         <select
                             id="savedReliabilityFilter"
@@ -376,9 +300,6 @@
 
                         </select>
 
-
-                        <!-- CLEAR -->
-
                         <button
                             type="button"
                             id="clearSavedFilters"
@@ -389,12 +310,7 @@
 
                     </div>
 
-
-
-                    <!-- EXPORT -->
-
                     <div class="export-buttons">
-
 
                         <button
                             type="button"
@@ -403,7 +319,6 @@
                         >
                             ↓ CSV
                         </button>
-
 
                         <button
                             type="button"
@@ -416,12 +331,6 @@
                     </div>
 
                 </div>
-
-
-
-                <!-- ==================================
-                     TABLE
-                ================================== -->
 
                 <div class="saved-table-wrap">
 
@@ -487,7 +396,6 @@
 
                         </thead>
 
-
                         <tbody id="savedLeadTableBody">
 
                         </tbody>
@@ -496,30 +404,18 @@
 
                 </div>
 
-
             </div>
 
         </section>
-
 
     </main>
 
 </div>
 
-
-
-<!-- =========================================
-     JAVASCRIPT
-========================================= -->
-
 <script>
 
 let savedLeads = [];
 
-
-// ==========================================
-// LOAD SAVED LEADS
-// ==========================================
 
 async function loadSavedLeads() {
 
@@ -527,7 +423,6 @@ async function loadSavedLeads() {
 
         const response =
             await fetch("/leads");
-
 
         if (!response.ok) {
 
@@ -537,10 +432,8 @@ async function loadSavedLeads() {
 
         }
 
-
         const data =
             await response.json();
-
 
         if (!data.success) {
 
@@ -553,15 +446,12 @@ async function loadSavedLeads() {
 
         }
 
-
         savedLeads =
             data.leads || [];
-
 
         displaySavedLeads(
             savedLeads
         );
-
 
     }
 
@@ -572,7 +462,6 @@ async function loadSavedLeads() {
             error
         );
 
-
         alert(
             "Unable to load saved leads."
         );
@@ -582,10 +471,6 @@ async function loadSavedLeads() {
 }
 
 
-// ==========================================
-// DISPLAY SAVED LEADS
-// ==========================================
-
 function displaySavedLeads(leads) {
 
     const tableBody =
@@ -593,25 +478,17 @@ function displaySavedLeads(leads) {
             "savedLeadTableBody"
         );
 
-
     tableBody.innerHTML = "";
-
 
     document.getElementById(
         "savedLeadCount"
     ).innerText =
         leads.length + " Leads";
 
-
-    // ======================================
-    // EMPTY STATE
-    // ======================================
-
     if (!leads.length) {
 
         const row =
             document.createElement("tr");
-
 
         row.innerHTML = `
 
@@ -624,31 +501,19 @@ function displaySavedLeads(leads) {
 
         `;
 
-
         tableBody.appendChild(
             row
         );
 
-
         return;
 
     }
-
-
-    // ======================================
-    // CREATE ROWS
-    // ======================================
 
     leads.forEach(
         function (lead) {
 
             const row =
                 document.createElement("tr");
-
-
-            // ==================================
-            // HIGH RELIABILITY
-            // ==================================
 
             if (
                 lead.reliability_status ===
@@ -661,13 +526,7 @@ function displaySavedLeads(leads) {
 
             }
 
-
-            // ==================================
-            // RELIABILITY BADGE
-            // ==================================
-
             let reliabilityHTML = "-";
-
 
             if (
                 lead.reliability_score !==
@@ -678,7 +537,6 @@ function displaySavedLeads(leads) {
 
                 let badgeClass =
                     "low";
-
 
                 if (
                     lead.reliability_status ===
@@ -698,7 +556,6 @@ function displaySavedLeads(leads) {
 
                 }
 
-
                 reliabilityHTML = `
 
                     <span
@@ -716,11 +573,6 @@ function displaySavedLeads(leads) {
                 `;
 
             }
-
-
-            // ==================================
-            // ROW
-            // ==================================
 
             row.innerHTML = `
 
@@ -752,9 +604,7 @@ function displaySavedLeads(leads) {
 
                     ${
                         lead.website
-
                         ?
-
                         `<a
                             href="${lead.website}"
                             target="_blank"
@@ -762,9 +612,7 @@ function displaySavedLeads(leads) {
                         >
                             Visit
                         </a>`
-
                         :
-
                         "-"
                     }
 
@@ -791,13 +639,9 @@ function displaySavedLeads(leads) {
                     ${
                         lead.missing_information &&
                         lead.missing_information !== "None"
-
                         ?
-
                         lead.missing_information
-
                         :
-
                         `<span class="complete-info">
                             Complete
                         </span>`
@@ -809,9 +653,7 @@ function displaySavedLeads(leads) {
 
                     ${
                         lead.google_maps_link
-
                         ?
-
                         `<a
                             href="${lead.google_maps_link}"
                             target="_blank"
@@ -819,16 +661,13 @@ function displaySavedLeads(leads) {
                         >
                             View Map
                         </a>`
-
                         :
-
                         "-"
                     }
 
                 </td>
 
             `;
-
 
             tableBody.appendChild(
                 row
@@ -839,10 +678,6 @@ function displaySavedLeads(leads) {
 
 }
 
-
-// ==========================================
-// FILTER SAVED LEADS
-// ==========================================
 
 function filterSavedLeads() {
 
@@ -855,12 +690,10 @@ function filterSavedLeads() {
             .toLowerCase()
             .trim();
 
-
     const reliability =
         document.getElementById(
             "savedReliabilityFilter"
         ).value;
-
 
     const filtered =
         savedLeads.filter(
@@ -872,18 +705,15 @@ function filterSavedLeads() {
                         ""
                     ).toLowerCase();
 
-
                 const matchesSearch =
                     businessName.includes(
                         searchText
                     );
 
-
                 const matchesReliability =
                     !reliability ||
                     lead.reliability_status ===
                     reliability;
-
 
                 return (
                     matchesSearch &&
@@ -893,17 +723,12 @@ function filterSavedLeads() {
             }
         );
 
-
     displaySavedLeads(
         filtered
     );
 
 }
 
-
-// ==========================================
-// SEARCH FILTER
-// ==========================================
 
 document
     .getElementById(
@@ -915,10 +740,6 @@ document
     );
 
 
-// ==========================================
-// RELIABILITY FILTER
-// ==========================================
-
 document
     .getElementById(
         "savedReliabilityFilter"
@@ -928,10 +749,6 @@ document
         filterSavedLeads
     );
 
-
-// ==========================================
-// CLEAR FILTERS
-// ==========================================
 
 document
     .getElementById(
@@ -945,11 +762,9 @@ document
                 "savedLeadSearch"
             ).value = "";
 
-
             document.getElementById(
                 "savedReliabilityFilter"
             ).value = "";
-
 
             displaySavedLeads(
                 savedLeads
@@ -958,10 +773,6 @@ document
         }
     );
 
-
-// ==========================================
-// EXPORT CSV
-// ==========================================
 
 document
     .getElementById(
@@ -980,7 +791,6 @@ document
                 return;
 
             }
-
 
             try {
 
@@ -1010,7 +820,6 @@ document
                         }
                     );
 
-
                 if (!response.ok) {
 
                     throw new Error(
@@ -1019,39 +828,31 @@ document
 
                 }
 
-
                 const blob =
                     await response.blob();
-
 
                 const url =
                     window.URL.createObjectURL(
                         blob
                     );
 
-
                 const link =
                     document.createElement(
                         "a"
                     );
-
 
                 link.href = url;
 
                 link.download =
                     "saved_leads.csv";
 
-
                 document.body.appendChild(
                     link
                 );
 
-
                 link.click();
 
-
                 link.remove();
-
 
                 window.URL.revokeObjectURL(
                     url
@@ -1065,7 +866,6 @@ document
                     error
                 );
 
-
                 alert(
                     "Unable to export CSV."
                 );
@@ -1075,10 +875,6 @@ document
         }
     );
 
-
-// ==========================================
-// EXPORT EXCEL
-// ==========================================
 
 document
     .getElementById(
@@ -1097,7 +893,6 @@ document
                 return;
 
             }
-
 
             try {
 
@@ -1127,7 +922,6 @@ document
                         }
                     );
 
-
                 if (!response.ok) {
 
                     throw new Error(
@@ -1136,39 +930,31 @@ document
 
                 }
 
-
                 const blob =
                     await response.blob();
-
 
                 const url =
                     window.URL.createObjectURL(
                         blob
                     );
 
-
                 const link =
                     document.createElement(
                         "a"
                     );
-
 
                 link.href = url;
 
                 link.download =
                     "saved_leads.xlsx";
 
-
                 document.body.appendChild(
                     link
                 );
 
-
                 link.click();
 
-
                 link.remove();
-
 
                 window.URL.revokeObjectURL(
                     url
@@ -1182,7 +968,6 @@ document
                     error
                 );
 
-
                 alert(
                     "Unable to export Excel."
                 );
@@ -1192,10 +977,6 @@ document
         }
     );
 
-
-// ==========================================
-// INITIAL LOAD
-// ==========================================
 
 loadSavedLeads();
 

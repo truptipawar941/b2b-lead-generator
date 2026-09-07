@@ -38,16 +38,8 @@ import uuid
 import threading
 
 
-# ==========================================
-# FLASK APP
-# ==========================================
-
 app = Flask(__name__)
 
-
-# ==========================================
-# BACKGROUND ENRICHMENT
-# ==========================================
 
 background_executor = ThreadPoolExecutor(
     max_workers=5
@@ -58,69 +50,40 @@ enrichment_jobs = {}
 enrichment_lock = threading.Lock()
 
 
-# ==========================================
-# HOME PAGE
-# ==========================================
-
 @app.route("/")
 def home():
-
     return render_template(
         "index.html"
     )
 
 
-# ==========================================
-# SAVED LEADS PAGE
-# ==========================================
-
 @app.route("/saved-leads")
 def saved_leads_page():
-
     return render_template(
         "saved_leads.html"
     )
 
 
-# ==========================================
-# ANALYTICS PAGE
-# ==========================================
-
 @app.route("/analytics")
 def analytics_page():
-
     return render_template(
         "analytics.html"
     )
 
 
-# ==========================================
-# DOWNLOAD HISTORY PAGE
-# ==========================================
-
 @app.route("/download-history")
 def download_history_page():
-
     return render_template(
         "download_history.html"
     )
 
 
-# ==========================================
-# SETTINGS PAGE
-# ==========================================
-
 @app.route("/settings")
 def settings_page():
-
     return render_template(
         "settings.html"
     )
 
-
-# ==========================================
-# DOWNLOAD HISTORY DATA
-# ==========================================
 
 @app.route(
     "/download-history-data",
@@ -129,15 +92,11 @@ def settings_page():
 def download_history_data():
 
     try:
-
         history = get_download_history()
 
         return jsonify({
-
             "success": True,
-
             "history": history
-
         })
 
     except Exception as error:
@@ -148,20 +107,12 @@ def download_history_data():
         )
 
         return jsonify({
-
             "success": False,
-
             "history": [],
-
             "message":
                 "Unable to load download history."
-
         }), 500
 
-
-# ==========================================
-# BUILD GOOGLE MAPS LINK
-# ==========================================
 
 def build_maps_link(lead):
 
@@ -187,21 +138,16 @@ def build_maps_link(lead):
     ).strip()
 
     search_text = ", ".join(
-
         part
-
         for part in [
             business_name,
             address,
             city_name
         ]
-
         if part
-
     )
 
     if not search_text:
-
         return ""
 
     return (
@@ -211,19 +157,13 @@ def build_maps_link(lead):
     )
 
 
-# ==========================================
-# PREPARE LEAD
-# ==========================================
-
 def prepare_lead(lead):
 
     lead["website_reachable"] = bool(
-
         lead.get(
             "website_reachable",
             False
         )
-
     )
 
     reliability = calculate_reliability(
@@ -239,15 +179,11 @@ def prepare_lead(lead):
     )
 
     lead["missing_information"] = (
-
         ", ".join(
             reliability["missing"]
         )
-
         if reliability["missing"]
-
         else "None"
-
     )
 
     if not lead.get(
@@ -261,24 +197,17 @@ def prepare_lead(lead):
         )
 
     lead["maps_search_link"] = (
-
         lead.get(
             "google_maps_link",
             ""
         )
-
         or build_maps_link(
             lead
         )
-
     )
 
     return lead
 
-
-# ==========================================
-# GET SAVED LEADS
-# ==========================================
 
 @app.route(
     "/leads",
@@ -305,30 +234,24 @@ def get_saved_leads():
         for lead in leads:
 
             business_name = str(
-
                 lead.get(
                     "business_name",
                     ""
                 ) or ""
-
             ).lower()
 
             category = str(
-
                 lead.get(
                     "category",
                     ""
                 ) or ""
-
             ).lower()
 
             lead_city = str(
-
                 lead.get(
                     "city",
                     ""
                 ) or ""
-
             ).lower()
 
             if keyword_filter:
@@ -338,13 +261,11 @@ def get_saved_leads():
                     and
                     keyword_filter not in category
                 ):
-
                     continue
 
             if city_filter:
 
                 if city_filter not in lead_city:
-
                     continue
 
             filtered_leads.append(
@@ -354,16 +275,12 @@ def get_saved_leads():
             )
 
         return jsonify({
-
             "success": True,
-
             "count": len(
                 filtered_leads
             ),
-
             "leads":
                 filtered_leads
-
         })
 
     except Exception as error:
@@ -374,18 +291,11 @@ def get_saved_leads():
         )
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "Unable to load saved leads."
-
         }), 500
 
-
-# ==========================================
-# ANALYTICS DATA
-# ==========================================
 
 @app.route(
     "/analytics-data",
@@ -402,56 +312,41 @@ def analytics_data():
         )
 
         websites = sum(
-
             1
-
             for lead in leads
-
             if str(
                 lead.get(
                     "website",
                     ""
                 ) or ""
             ).strip()
-
         )
 
         emails = sum(
-
             1
-
             for lead in leads
-
             if str(
                 lead.get(
                     "email",
                     ""
                 ) or ""
             ).strip()
-
         )
 
         phones = sum(
-
             1
-
             for lead in leads
-
             if str(
                 lead.get(
                     "phone",
                     ""
                 ) or ""
             ).strip()
-
         )
 
         social = sum(
-
             1
-
             for lead in leads
-
             if (
                 lead.get("facebook")
                 or
@@ -461,15 +356,11 @@ def analytics_data():
                 or
                 lead.get("twitter")
             )
-
         )
 
         ratings = sum(
-
             1
-
             for lead in leads
-
             if lead.get(
                 "rating"
             ) not in (
@@ -477,15 +368,11 @@ def analytics_data():
                 "",
                 "-"
             )
-
         )
 
         reviews = sum(
-
             1
-
             for lead in leads
-
             if lead.get(
                 "review_count"
             ) not in (
@@ -493,7 +380,6 @@ def analytics_data():
                 "",
                 "-"
             )
-
         )
 
         high = 0
@@ -509,7 +395,6 @@ def analytics_data():
             )
 
             score = reliability["score"]
-
             status = reliability["status"]
 
             scores.append(
@@ -517,69 +402,39 @@ def analytics_data():
             )
 
             if status == "HIGH":
-
                 high += 1
 
             elif status == "MEDIUM":
-
                 medium += 1
 
             else:
-
                 low += 1
 
         average_reliability = (
-
             round(
                 sum(scores)
                 /
                 len(scores),
                 1
             )
-
             if scores
-
             else 0
-
         )
 
         return jsonify({
-
             "success": True,
-
-            "total":
-                total,
-
-            "websites":
-                websites,
-
-            "emails":
-                emails,
-
-            "phones":
-                phones,
-
-            "social":
-                social,
-
-            "ratings":
-                ratings,
-
-            "reviews":
-                reviews,
-
-            "high":
-                high,
-
-            "medium":
-                medium,
-
-            "low":
-                low,
-
+            "total": total,
+            "websites": websites,
+            "emails": emails,
+            "phones": phones,
+            "social": social,
+            "ratings": ratings,
+            "reviews": reviews,
+            "high": high,
+            "medium": medium,
+            "low": low,
             "average_reliability":
                 average_reliability
-
         })
 
     except Exception as error:
@@ -590,50 +445,36 @@ def analytics_data():
         )
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "Unable to load analytics."
-
         }), 500
 
-
-# ==========================================
-# SINGLE LEAD ENRICHMENT
-# ==========================================
 
 def enrich_single_lead(lead):
 
     website = str(
-
         lead.get(
             "website",
             ""
         ) or ""
-
     ).strip()
 
     business_name = str(
-
         lead.get(
             "business_name",
             ""
         ) or ""
-
     ).strip()
 
     city = str(
-
         lead.get(
             "city",
             ""
         ) or ""
-
     ).strip()
 
     result = {
-
         "website":
             website,
 
@@ -657,12 +498,6 @@ def enrich_single_lead(lead):
         "website_reachable":
             False
     }
-
-
-    # ======================================
-    # STEP 1:
-    # DISCOVER WEBSITE IF MISSING
-    # ======================================
 
     if not website and business_name:
 
@@ -700,12 +535,6 @@ def enrich_single_lead(lead):
                 error
             )
 
-
-    # ======================================
-    # STEP 2:
-    # NO WEBSITE FOUND
-    # ======================================
-
     if not website:
 
         print(
@@ -714,12 +543,6 @@ def enrich_single_lead(lead):
         )
 
         return result
-
-
-    # ======================================
-    # STEP 3:
-    # SCRAPE WEBSITE
-    # ======================================
 
     try:
 
@@ -732,91 +555,57 @@ def enrich_single_lead(lead):
             website
         )
 
-
-        # ----------------------------------
-        # EMAIL
-        # ----------------------------------
-
         if not result["email"]:
 
             result["email"] = (
-
                 enrichment.get(
                     "email",
                     ""
                 ) or ""
-
             )
-
-
-        # ----------------------------------
-        # PHONE
-        # ----------------------------------
 
         if not result["phone"]:
 
             result["phone"] = (
-
                 enrichment.get(
                     "phone",
                     ""
                 ) or ""
-
             )
 
-
-        # ----------------------------------
-        # SOCIAL
-        # ----------------------------------
-
         result["facebook"] = (
-
             enrichment.get(
                 "facebook",
                 ""
             ) or ""
-
         )
 
         result["instagram"] = (
-
             enrichment.get(
                 "instagram",
                 ""
             ) or ""
-
         )
 
         result["linkedin"] = (
-
             enrichment.get(
                 "linkedin",
                 ""
             ) or ""
-
         )
 
         result["twitter"] = (
-
             enrichment.get(
                 "twitter",
                 ""
             ) or ""
-
         )
 
-
-        # ----------------------------------
-        # WEBSITE REACHABILITY
-        # ----------------------------------
-
         result["website_reachable"] = bool(
-
             enrichment.get(
                 "website_reachable",
                 False
             )
-
         )
 
         print(
@@ -831,13 +620,6 @@ def enrich_single_lead(lead):
             error
         )
 
-    # ======================================
-    # STEP 4:
-    # CONTACT FALLBACK IF STILL MISSING
-    # ======================================
-    # If the website did not provide phone/email,
-    # try discovering publicly available contact
-    # information from search results.
     if (
         (not result["phone"] or not result["email"])
         and business_name
@@ -885,10 +667,6 @@ def enrich_single_lead(lead):
     return result
 
 
-# ==========================================
-# BACKGROUND ENRICHMENT JOB
-# ==========================================
-
 def run_enrichment_job(
     job_id,
     leads
@@ -901,7 +679,6 @@ def run_enrichment_job(
     with enrichment_lock:
 
         enrichment_jobs[job_id] = {
-
             "status":
                 "running",
 
@@ -922,16 +699,13 @@ def run_enrichment_job(
         ) as executor:
 
             future_map = {
-
                 executor.submit(
                     enrich_single_lead,
                     lead
                 ):
                     lead
-
                 for lead in leads
             }
-
 
             for future in as_completed(
                 future_map
@@ -947,11 +721,6 @@ def run_enrichment_job(
                         future.result()
                     )
 
-
-                    # ----------------------
-                    # WEBSITE
-                    # ----------------------
-
                     if enrichment.get(
                         "website"
                     ):
@@ -962,46 +731,27 @@ def run_enrichment_job(
                             ]
                         )
 
-
-                    # ----------------------
-                    # EMAIL
-                    # ----------------------
-
                     if not lead.get(
                         "email"
                     ):
 
                         lead["email"] = (
-
                             enrichment.get(
                                 "email",
                                 ""
                             ) or ""
-
                         )
-
-
-                    # ----------------------
-                    # PHONE
-                    # ----------------------
 
                     if not lead.get(
                         "phone"
                     ):
 
                         lead["phone"] = (
-
                             enrichment.get(
                                 "phone",
                                 ""
                             ) or ""
-
                         )
-
-
-                    # ----------------------
-                    # SOCIAL
-                    # ----------------------
 
                     if enrichment.get(
                         "facebook"
@@ -1013,7 +763,6 @@ def run_enrichment_job(
                             ]
                         )
 
-
                     if enrichment.get(
                         "instagram"
                     ):
@@ -1023,7 +772,6 @@ def run_enrichment_job(
                                 "instagram"
                             ]
                         )
-
 
                     if enrichment.get(
                         "linkedin"
@@ -1035,7 +783,6 @@ def run_enrichment_job(
                             ]
                         )
 
-
                     if enrichment.get(
                         "twitter"
                     ):
@@ -1046,14 +793,11 @@ def run_enrichment_job(
                             ]
                         )
 
-
                     lead["website_reachable"] = (
-
                         enrichment.get(
                             "website_reachable",
                             False
                         )
-
                     )
 
                 except Exception as error:
@@ -1063,15 +807,9 @@ def run_enrichment_job(
                         error
                     )
 
-
-                # ----------------------
-                # UPDATE RELIABILITY
-                # ----------------------
-
                 prepare_lead(
                     lead
                 )
-
 
                 with enrichment_lock:
 
@@ -1081,15 +819,9 @@ def run_enrichment_job(
                         "completed"
                     ] += 1
 
-
-        # ==================================
-        # SAVE ENRICHED DATA
-        # ==================================
-
         save_leads(
             leads
         )
-
 
         with enrichment_lock:
 
@@ -1098,7 +830,6 @@ def run_enrichment_job(
             ][
                 "status"
             ] = "completed"
-
 
     except Exception as error:
 
@@ -1115,10 +846,6 @@ def run_enrichment_job(
                 "status"
             ] = "failed"
 
-
-# ==========================================
-# ENRICHMENT STATUS
-# ==========================================
 
 @app.route(
     "/enrichment-status/<job_id>",
@@ -1137,37 +864,23 @@ def enrichment_status(
         if not job:
 
             return jsonify({
-
                 "success": False,
-
                 "message":
                     "Enrichment job not found."
-
             }), 404
 
-
         return jsonify({
-
             "success": True,
-
             "status":
                 job["status"],
-
             "total":
                 job["total"],
-
             "completed":
                 job["completed"],
-
             "leads":
                 job["leads"]
-
         })
 
-
-# ==========================================
-# SEARCH LEADS
-# ==========================================
 
 @app.route(
     "/search",
@@ -1177,203 +890,126 @@ def search():
 
     data = request.get_json() or {}
 
-
     keyword = str(
-
         data.get(
             "keyword",
             ""
         ) or ""
-
     ).strip()
 
-
     city = str(
-
         data.get(
             "city",
             ""
         ) or ""
-
     ).strip()
-
-
-    # ======================================
-    # VALIDATION
-    # ======================================
 
     if not keyword or not city:
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "Please enter both keyword and city."
-
         })
-
 
     try:
 
-        # ==================================
-        # STEP 1:
-        # BUSINESS SEARCH
-        # ==================================
-
         leads = search_businesses(
-
             keyword,
             city,
             limit=130
-
         )
-
 
         print(
             f"Businesses received: "
             f"{len(leads)}"
         )
 
-
         if not leads:
 
             return jsonify({
-
                 "success": True,
-
                 "count": 0,
-
                 "leads": [],
-
                 "message":
                     "No businesses found. "
                     "Please try another "
                     "keyword or city."
-
             })
-
-
-        # ==================================
-        # STEP 2:
-        # DEDUPLICATION
-        # ==================================
 
         print(
             f"Before deduplication: "
             f"{len(leads)}"
         )
 
-
         leads = deduplicate_leads(
             leads
         )
-
 
         print(
             f"After deduplication: "
             f"{len(leads)}"
         )
 
-
-        # ==================================
-        # STEP 3:
-        # KEEP MAXIMUM 100 UNIQUE LEADS
-        # ==================================
-
         leads = leads[:100]
-
 
         print(
             f"Final unique leads kept: "
             f"{len(leads)}"
         )
 
-
-        # ==================================
-        # STEP 4:
-        # INITIAL DATA
-        # ==================================
-
         for lead in leads:
 
             lead["facebook"] = (
-
                 lead.get(
                     "facebook",
                     ""
                 ) or ""
-
             )
 
-
             lead["instagram"] = (
-
                 lead.get(
                     "instagram",
                     ""
                 ) or ""
-
             )
 
-
             lead["linkedin"] = (
-
                 lead.get(
                     "linkedin",
                     ""
                 ) or ""
-
             )
 
-
             lead["twitter"] = (
-
                 lead.get(
                     "twitter",
                     ""
                 ) or ""
-
             )
 
-
             lead["website_reachable"] = bool(
-
                 lead.get(
                     "website_reachable",
                     False
                 )
-
             )
 
-
             lead["rating"] = (
-
                 lead.get(
                     "rating",
                     ""
                 ) or ""
-
             )
 
-
             lead["review_count"] = (
-
                 lead.get(
                     "review_count",
                     ""
                 ) or ""
-
             )
 
-
             lead["maps_search_link"] = ""
-
-
-        # ==================================
-        # STEP 5:
-        # GOOGLE MAPS + RELIABILITY
-        # ==================================
 
         for lead in leads:
 
@@ -1381,33 +1017,19 @@ def search():
                 lead
             )
 
-
-        # ==================================
-        # STEP 6:
-        # SAVE INITIAL RESULTS
-        # ==================================
-
         save_leads(
             leads
         )
 
-
-        # ==================================
-        # STEP 7:
-        # CREATE BACKGROUND JOB
-        # ==================================
-
         job_id = str(
             uuid.uuid4()
         )
-
 
         with enrichment_lock:
 
             enrichment_jobs[
                 job_id
             ] = {
-
                 "status":
                     "queued",
 
@@ -1419,50 +1041,30 @@ def search():
 
                 "leads":
                     leads
-
             }
 
-
         background_executor.submit(
-
             run_enrichment_job,
-
             job_id,
-
             leads
-
         )
-
 
         print(
             f"Final leads returned immediately: "
             f"{len(leads)}"
         )
 
-
-        # ==================================
-        # STEP 8:
-        # RETURN IMMEDIATELY
-        # ==================================
-
         return jsonify({
-
             "success": True,
-
             "count":
                 len(leads),
-
             "leads":
                 leads,
-
             "job_id":
                 job_id,
-
             "enrichment_pending":
                 True
-
         })
-
 
     except Exception as error:
 
@@ -1474,21 +1076,13 @@ def search():
             error
         )
 
-
         return jsonify({
-
             "success": False,
-
             "message":
                 "Unable to generate leads. "
                 "Please try again."
-
         }), 500
 
-
-# ==========================================
-# EXPORT CSV
-# ==========================================
 
 @app.route(
     "/export/csv",
@@ -1498,44 +1092,32 @@ def export_csv():
 
     data = request.get_json() or {}
 
-
     leads = data.get(
         "leads",
         []
     )
 
-
     keyword = str(
-
         data.get(
             "keyword",
             ""
         ) or ""
-
     ).strip()
 
-
     city = str(
-
         data.get(
             "city",
             ""
         ) or ""
-
     ).strip()
-
 
     if not leads:
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "No leads available for export."
-
         })
-
 
     try:
 
@@ -1543,53 +1125,35 @@ def export_csv():
             leads
         )
 
-
         output = io.StringIO()
-
 
         df.to_csv(
             output,
             index=False
         )
 
-
         output.seek(0)
 
-
         save_download_history(
-
             keyword,
-
             city,
-
             len(leads),
-
             "CSV"
-
         )
 
-
         return send_file(
-
             io.BytesIO(
-
                 output
                 .getvalue()
                 .encode(
                     "utf-8-sig"
                 )
-
             ),
-
             mimetype="text/csv",
-
             as_attachment=True,
-
             download_name=
                 "b2b_leads.csv"
-
         )
-
 
     except Exception as error:
 
@@ -1598,20 +1162,12 @@ def export_csv():
             error
         )
 
-
         return jsonify({
-
             "success": False,
-
             "message":
                 "CSV export failed."
-
         }), 500
 
-
-# ==========================================
-# EXPORT EXCEL
-# ==========================================
 
 @app.route(
     "/export/excel",
@@ -1621,53 +1177,36 @@ def export_excel():
 
     data = request.get_json() or {}
 
-
     leads = data.get(
         "leads",
         []
     )
 
-
     keyword = str(
-
         data.get(
             "keyword",
             ""
         ) or ""
-
     ).strip()
 
-
     city = str(
-
         data.get(
             "city",
             ""
         ) or ""
-
     ).strip()
-
 
     if not leads:
 
         return jsonify({
-
             "success": False,
-
             "message":
                 "No leads available for export."
-
         })
-
 
     try:
 
-        # ======================================
-        # CRM-READY COLUMN ORDER
-        # ======================================
-
         columns = [
-
             "business_name",
             "category",
             "address",
@@ -1688,20 +1227,11 @@ def export_excel():
             "google_maps_link",
             "latitude",
             "longitude"
-
         ]
-
-
-        # ======================================
-        # CREATE DATAFRAME
-        # ======================================
 
         df = pd.DataFrame(
             leads
         )
-
-
-        # Add missing columns if necessary
 
         for column in columns:
 
@@ -1709,20 +1239,11 @@ def export_excel():
 
                 df[column] = ""
 
-
-        # Keep only required columns
-
         df = df[
             columns
         ]
 
-
-        # ======================================
-        # FRIENDLY EXCEL HEADERS
-        # ======================================
-
         df.columns = [
-
             "Business Name",
             "Category",
             "Address",
@@ -1743,16 +1264,9 @@ def export_excel():
             "Google Maps",
             "Latitude",
             "Longitude"
-
         ]
 
-
-        # ======================================
-        # CREATE EXCEL FILE
-        # ======================================
-
         output = io.BytesIO()
-
 
         with pd.ExcelWriter(
             output,
@@ -1765,47 +1279,25 @@ def export_excel():
                 sheet_name="Leads"
             )
 
-
         output.seek(0)
 
-
-        # ======================================
-        # SAVE DOWNLOAD HISTORY
-        # ======================================
-
         save_download_history(
-
             keyword,
-
             city,
-
             len(leads),
-
             "Excel"
-
         )
 
-
-        # ======================================
-        # SEND FILE
-        # ======================================
-
         return send_file(
-
             output,
-
             mimetype=(
                 "application/vnd.openxmlformats-"
                 "officedocument.spreadsheetml.sheet"
             ),
-
             as_attachment=True,
-
             download_name=
                 "b2b_leads.xlsx"
-
         )
-
 
     except Exception as error:
 
@@ -1814,20 +1306,12 @@ def export_excel():
             error
         )
 
-
         return jsonify({
-
             "success": False,
-
             "message":
                 "Excel export failed."
-
         }), 500
 
-
-# ==========================================
-# RUN APPLICATION
-# ==========================================
 
 if __name__ == "__main__":
 

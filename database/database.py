@@ -1,19 +1,13 @@
 import sqlite3
 from pathlib import Path
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
-
-# ==========================================
-# DATABASE PATH
-# ==========================================
 
 BASE_DIR = Path(__file__).resolve().parent
 
 DATABASE_PATH = BASE_DIR / "leads.db"
 
-
-# ==========================================
-# DATABASE CONNECTION
-# ==========================================
 
 def get_connection():
 
@@ -26,20 +20,11 @@ def get_connection():
     return connection
 
 
-# ==========================================
-# CREATE / UPDATE DATABASE
-# ==========================================
-
 def init_database():
 
     with get_connection() as connection:
 
         cursor = connection.cursor()
-
-
-        # ==================================
-        # CREATE LEADS TABLE
-        # ==================================
 
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS leads (
@@ -93,11 +78,6 @@ def init_database():
             )
         """)
 
-
-        # ==================================
-        # CREATE DOWNLOAD HISTORY TABLE
-        # ==================================
-
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS download_history (
 
@@ -116,11 +96,6 @@ def init_database():
             )
         """)
 
-
-        # ==================================
-        # MIGRATE OLD DATABASE
-        # ==================================
-
         cursor.execute(
             "PRAGMA table_info(leads)"
         )
@@ -129,7 +104,6 @@ def init_database():
             row["name"]
             for row in cursor.fetchall()
         }
-
 
         new_columns = {
 
@@ -147,7 +121,6 @@ def init_database():
 
         }
 
-
         for column_name, column_type in new_columns.items():
 
             if column_name not in existing_columns:
@@ -160,18 +133,12 @@ def init_database():
                     """
                 )
 
-
         connection.commit()
-
 
     print(
         "Database initialized successfully."
     )
 
-
-# ==========================================
-# SAVE / UPDATE LEADS
-# ==========================================
 
 def save_leads(leads):
 
@@ -183,16 +150,13 @@ def save_leads(leads):
 
         return
 
-
     inserted = 0
     updated = 0
     skipped = 0
 
-
     with get_connection() as connection:
 
         cursor = connection.cursor()
-
 
         for lead in leads:
 
@@ -203,14 +167,12 @@ def save_leads(leads):
                 )
             ).strip()
 
-
             business_name = str(
                 lead.get(
                     "business_name",
                     ""
                 )
             ).strip()
-
 
             address = str(
                 lead.get(
@@ -219,13 +181,7 @@ def save_leads(leads):
                 )
             ).strip()
 
-
-            # ==================================
-            # FIND EXISTING RECORD
-            # ==================================
-
             existing = None
-
 
             if place_id:
 
@@ -240,12 +196,6 @@ def save_leads(leads):
                 )
 
                 existing = cursor.fetchone()
-
-
-            # ==================================
-            # FALLBACK:
-            # BUSINESS NAME + ADDRESS
-            # ==================================
 
             if not existing and business_name:
 
@@ -264,11 +214,6 @@ def save_leads(leads):
                 )
 
                 existing = cursor.fetchone()
-
-
-            # ==================================
-            # PREPARE VALUES
-            # ==================================
 
             values = (
 
@@ -371,11 +316,6 @@ def save_leads(leads):
 
             )
 
-
-            # ==================================
-            # UPDATE EXISTING LEAD
-            # ==================================
-
             if existing:
 
                 cursor.execute(
@@ -417,11 +357,6 @@ def save_leads(leads):
                 )
 
                 updated += 1
-
-
-            # ==================================
-            # INSERT NEW LEAD
-            # ==================================
 
             else:
 
@@ -467,14 +402,11 @@ def save_leads(leads):
 
                 inserted += 1
 
-
         connection.commit()
-
 
     skipped = len(leads) - (
         inserted + updated
     )
-
 
     print(
         f"Database: "
@@ -484,16 +416,11 @@ def save_leads(leads):
     )
 
 
-# ==========================================
-# GET ALL LEADS
-# ==========================================
-
 def get_all_leads():
 
     with get_connection() as connection:
 
         cursor = connection.cursor()
-
 
         cursor.execute(
             """
@@ -503,19 +430,13 @@ def get_all_leads():
             """
         )
 
-
         rows = cursor.fetchall()
-
 
         return [
             dict(row)
             for row in rows
         ]
 
-
-# ==========================================
-# SAVE DOWNLOAD HISTORY
-# ==========================================
 
 def save_download_history(
     keyword,
@@ -524,36 +445,38 @@ def save_download_history(
     file_type
 ):
 
+    downloaded_at = datetime.now(
+        ZoneInfo("Asia/Kolkata")
+    ).strftime("%Y-%m-%d %H:%M:%S")
+
     with get_connection() as connection:
 
         cursor = connection.cursor()
 
-
         cursor.execute(
             """
             INSERT INTO download_history (
-
                 keyword,
                 city,
                 lead_count,
-                file_type
-
+                file_type,
+                downloaded_at
             )
 
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
             """,
 
             (
                 keyword,
                 city,
                 lead_count,
-                file_type
+                file_type,
+                downloaded_at
             )
 
         )
 
         connection.commit()
-
 
     print(
         f"Download history saved: "
@@ -562,39 +485,28 @@ def save_download_history(
     )
 
 
-# ==========================================
-# GET DOWNLOAD HISTORY
-# ==========================================
-
 def get_download_history():
 
     with get_connection() as connection:
 
         cursor = connection.cursor()
 
-
         cursor.execute(
             """
             SELECT
-
                 id,
                 keyword,
                 city,
                 lead_count,
                 file_type,
                 downloaded_at
-
             FROM download_history
-
             ORDER BY id DESC
-
             LIMIT 50
             """
         )
 
-
         rows = cursor.fetchall()
-
 
         return [
             dict(row)

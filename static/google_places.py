@@ -4,10 +4,6 @@ import requests
 from dotenv import load_dotenv
 
 
-# ==========================================
-# LOAD API KEY
-# ==========================================
-
 load_dotenv()
 
 API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
@@ -17,10 +13,6 @@ GOOGLE_PLACES_URL = (
     "https://places.googleapis.com/v1/places:searchText"
 )
 
-
-# ==========================================
-# SEARCH GOOGLE PLACES
-# ==========================================
 
 def search_google_places(keyword, city, limit=20):
 
@@ -35,17 +27,13 @@ def search_google_places(keyword, city, limit=20):
     if not keyword or not city:
         return []
 
-
-    # Google text search
     text_query = f"{keyword} in {city}"
-
 
     payload = {
         "textQuery": text_query,
         "pageSize": min(limit, 20),
         "languageCode": "en"
     }
-
 
     headers = {
 
@@ -67,20 +55,13 @@ def search_google_places(keyword, city, limit=20):
         )
     }
 
-
     response = requests.post(
-
         GOOGLE_PLACES_URL,
-
         json=payload,
-
         headers=headers,
-
         timeout=20
     )
 
-
-    # Show useful Google error
     if not response.ok:
 
         print(
@@ -91,22 +72,14 @@ def search_google_places(keyword, city, limit=20):
 
         response.raise_for_status()
 
-
     data = response.json()
-
 
     places = data.get(
         "places",
         []
     )
 
-
     leads = []
-
-
-    # ==========================================
-    # CONVERT GOOGLE RESULTS
-    # ==========================================
 
     for place in places:
 
@@ -115,24 +88,20 @@ def search_google_places(keyword, city, limit=20):
             {}
         )
 
-
         business_name = display_name.get(
             "text",
             ""
         )
-
 
         location = place.get(
             "location",
             {}
         )
 
-
         phone = place.get(
             "nationalPhoneNumber",
             ""
         )
-
 
         if not phone:
 
@@ -140,7 +109,6 @@ def search_google_places(keyword, city, limit=20):
                 "internationalPhoneNumber",
                 ""
             )
-
 
         lead = {
 
@@ -203,13 +171,10 @@ def search_google_places(keyword, city, limit=20):
             )
         }
 
-
         leads.append(lead)
-
 
     print(
         f"Google Places found: {len(leads)}"
     )
-
 
     return leads

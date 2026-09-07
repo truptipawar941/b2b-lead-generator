@@ -21,24 +21,15 @@
 
     <style>
 
-        /* ==========================================
-           DOWNLOAD HISTORY
-        ========================================== */
-
         .history-page {
             padding: 28px;
         }
 
-
         .history-section {
             background: #ffffff;
-
             border: 1px solid #e5eaf1;
-
             border-radius: 18px;
-
             padding: 26px;
-
             box-shadow:
                 0 8px 28px rgba(
                     24,
@@ -48,109 +39,69 @@
                 );
         }
 
-
         .history-table-wrapper {
             width: 100%;
-
             overflow-x: auto;
-
             margin-top: 24px;
-
             border: 1px solid #edf0f4;
-
             border-radius: 12px;
         }
 
-
         .history-table {
             width: 100%;
-
             min-width: 700px;
-
             border-collapse: collapse;
         }
 
-
         .history-table th,
         .history-table td {
-
             padding: 15px;
-
             text-align: left;
-
             border-bottom: 1px solid #edf0f4;
-
             font-size: 12px;
         }
 
-
         .history-table th {
-
             background: #f7f9fc;
-
             color: #68768b;
-
             font-size: 10px;
-
             text-transform: uppercase;
-
             letter-spacing: 0.5px;
-
             white-space: nowrap;
         }
-
 
         .history-table td {
             color: #526176;
         }
 
-
         .history-table tbody tr:hover {
             background: #fafbfd;
         }
 
-
         .format-badge {
-
             display: inline-flex;
-
             align-items: center;
-
             padding: 5px 10px;
-
             border-radius: 20px;
-
             font-size: 10px;
-
             font-weight: 800;
         }
 
-
         .format-csv {
-
             background: #edf4ff;
-
             color: #3268ed;
         }
 
-
         .format-excel {
-
             background: #eaf8f0;
-
             color: #1f9d68;
         }
 
-
         .empty-history {
-
             padding: 50px !important;
-
             text-align: center !important;
-
             color: #98a4b5;
         }
-
 
         @media (max-width: 700px) {
 
@@ -164,28 +115,17 @@
 
 </head>
 
-
 <body>
-
 
 <div class="app-shell">
 
-
-    <!-- =========================================
-         SIDEBAR
-    ========================================== -->
-
     <aside class="sidebar">
-
-
-        <!-- BRAND -->
 
         <div class="sidebar-brand">
 
             <div class="sidebar-logo">
                 B2B
             </div>
-
 
             <div class="sidebar-title">
 
@@ -201,13 +141,7 @@
 
         </div>
 
-
-        <!-- NAVIGATION -->
-
         <nav class="sidebar-nav">
-
-
-            <!-- HOME -->
 
             <a
                 href="/"
@@ -224,9 +158,6 @@
 
             </a>
 
-
-            <!-- SAVED LEADS -->
-
             <a
                 href="/saved-leads"
                 class="nav-item"
@@ -242,9 +173,6 @@
 
             </a>
 
-
-            <!-- ANALYTICS -->
-
             <a
                 href="/analytics"
                 class="nav-item"
@@ -259,9 +187,6 @@
                 </span>
 
             </a>
-
-
-            <!-- DOWNLOAD HISTORY -->
 
             <a
                 href="/download-history"
@@ -280,15 +205,7 @@
 
         </nav>
 
-
-        <!-- ======================================
-             BOTTOM
-        ======================================= -->
-
         <div class="sidebar-bottom">
-
-
-            <!-- SETTINGS -->
 
             <a
                 href="/settings"
@@ -304,9 +221,6 @@
                 </span>
 
             </a>
-
-
-            <!-- SYSTEM STATUS -->
 
             <div class="sidebar-status">
 
@@ -330,28 +244,15 @@
 
     </aside>
 
-
-
-    <!-- =========================================
-         MAIN CONTENT
-    ========================================== -->
-
     <main class="main-content">
 
-
-        <!-- =========================================
-             HEADER
-        ========================================== -->
-
         <header class="top-header">
-
 
             <div class="brand-section">
 
                 <div class="brand-icon">
                     B2B
                 </div>
-
 
                 <div>
 
@@ -367,7 +268,6 @@
 
             </div>
 
-
             <div class="header-status">
 
                 <span class="status-dot"></span>
@@ -380,21 +280,9 @@
 
         </header>
 
-
-
-        <!-- =========================================
-             PAGE CONTENT
-        ========================================== -->
-
         <section class="history-page">
 
-
             <div class="history-section">
-
-
-                <!-- ==================================
-                     HEADING
-                ================================== -->
 
                 <div class="results-heading">
 
@@ -415,12 +303,6 @@
                     </div>
 
                 </div>
-
-
-
-                <!-- ==================================
-                     TABLE
-                ================================== -->
 
                 <div class="history-table-wrapper">
 
@@ -454,9 +336,7 @@
 
                         </thead>
 
-
                         <tbody id="historyTableBody">
-
 
                             <tr>
 
@@ -469,29 +349,19 @@
 
                             </tr>
 
-
                         </tbody>
 
                     </table>
 
                 </div>
 
-
             </div>
 
-
         </section>
-
 
     </main>
 
 </div>
-
-
-
-<!-- ==========================================
-     DOWNLOAD HISTORY SCRIPT
-========================================== -->
 
 <script>
 
@@ -504,7 +374,6 @@ async function loadDownloadHistory() {
                 "/download-history-data"
             );
 
-
         if (!response.ok) {
 
             throw new Error(
@@ -513,19 +382,15 @@ async function loadDownloadHistory() {
 
         }
 
-
         const data =
             await response.json();
-
 
         const tableBody =
             document.getElementById(
                 "historyTableBody"
             );
 
-
         tableBody.innerHTML = "";
-
 
         if (
             !data.success ||
@@ -551,7 +416,6 @@ async function loadDownloadHistory() {
             return;
         }
 
-
         data.history.forEach(
             function (item) {
 
@@ -560,12 +424,10 @@ async function loadDownloadHistory() {
                         "tr"
                     );
 
-
                 const formatClass =
                     item.file_type === "Excel"
                     ? "format-excel"
                     : "format-csv";
-
 
                 row.innerHTML = `
 
@@ -597,7 +459,6 @@ async function loadDownloadHistory() {
 
                 `;
 
-
                 tableBody.appendChild(
                     row
                 );
@@ -613,7 +474,6 @@ async function loadDownloadHistory() {
             "History loading error:",
             error
         );
-
 
         document.getElementById(
             "historyTableBody"
@@ -636,15 +496,9 @@ async function loadDownloadHistory() {
 
 }
 
-
-// ==========================================
-// INITIAL LOAD
-// ==========================================
-
 loadDownloadHistory();
 
 </script>
-
 
 </body>
 

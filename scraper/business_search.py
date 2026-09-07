@@ -3,10 +3,6 @@ import re
 import time
 
 
-# ==========================================
-# OVERPASS SERVERS
-# ==========================================
-
 OVERPASS_SERVERS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
@@ -18,10 +14,6 @@ HEADERS = {
     "User-Agent": "B2B-Lead-Generator/1.0"
 }
 
-
-# ==========================================
-# BUSINESS CATEGORY TAGS
-# ==========================================
 
 CATEGORY_TAGS = {
 
@@ -126,37 +118,26 @@ CATEGORY_TAGS = {
 }
 
 
-# ==========================================
-# GET CATEGORY FILTERS
-# ==========================================
-
 def get_tag_filters(keyword):
 
     keyword_lower = keyword.lower().strip()
 
-    # Exact category
     if keyword_lower in CATEGORY_TAGS:
 
         return CATEGORY_TAGS[keyword_lower]
 
-    # Partial category
     for category, tags in CATEGORY_TAGS.items():
 
         if category in keyword_lower:
 
             return tags
 
-    # Generic name search
     safe_keyword = re.escape(keyword)
 
     return [
         f'["name"~"{safe_keyword}",i]'
     ]
 
-
-# ==========================================
-# GET FIRST AVAILABLE TAG
-# ==========================================
 
 def first_tag(tags, keys):
 
@@ -175,23 +156,16 @@ def first_tag(tags, keys):
     return ""
 
 
-# ==========================================
-# NORMALIZE TEXT
-# Used for better deduplication
-# ==========================================
-
 def normalize_text(value):
 
     value = str(value or "").lower().strip()
 
-    # Normalize spaces
     value = re.sub(
         r"\s+",
         " ",
         value
     )
 
-    # Remove punctuation
     value = re.sub(
         r"[^\w\s]",
         "",
@@ -201,10 +175,6 @@ def normalize_text(value):
     return value
 
 
-# ==========================================
-# CLEAN PHONE
-# ==========================================
-
 def clean_phone(phone):
 
     if not phone:
@@ -213,14 +183,12 @@ def clean_phone(phone):
 
     phone = str(phone).strip()
 
-    # Normalize whitespace
     phone = re.sub(
         r"\s+",
         " ",
         phone
     )
 
-    # Normalize multiple phone separators
     phone = phone.replace(
         ";",
         " / "
@@ -231,7 +199,6 @@ def clean_phone(phone):
         " / "
     )
 
-    # Remove unnecessary separators
     phone = phone.strip(
         " /,-"
     )
@@ -239,39 +206,23 @@ def clean_phone(phone):
     return phone
 
 
-# ==========================================
-# BUILD ADDRESS
-# ==========================================
-
 def build_address(
     tags,
     city
 ):
 
-    # ======================================
-    # FULL ADDRESS
-    # ======================================
-
     full_address = first_tag(
-
         tags,
-
         [
             "addr:full",
             "address",
             "contact:address"
         ]
-
     )
 
     if full_address:
 
         return full_address
-
-
-    # ======================================
-    # ADDRESS PARTS
-    # ======================================
 
     address_parts = [
 
@@ -322,25 +273,13 @@ def build_address(
                 "postal_code"
             ]
         )
-
     ]
 
-
-    # Remove empty values
     address_parts = [
-
         part.strip()
-
         for part in address_parts
-
         if part and part.strip()
-
     ]
-
-
-    # ======================================
-    # REMOVE DUPLICATES
-    # ======================================
 
     unique_parts = []
 
@@ -360,15 +299,9 @@ def build_address(
                 key
             )
 
-
     address = ", ".join(
         unique_parts
     )
-
-
-    # ======================================
-    # ADD CITY
-    # ======================================
 
     if address:
 
@@ -382,13 +315,8 @@ def build_address(
 
         address = city
 
-
     return address
 
-
-# ==========================================
-# PROCESS API RESULTS
-# ==========================================
 
 def process_results(
     data,
@@ -401,7 +329,6 @@ def process_results(
 
     seen = set()
 
-
     for element in data.get(
         "elements",
         []
@@ -412,56 +339,29 @@ def process_results(
             {}
         )
 
-
-        # ==================================
-        # BUSINESS NAME
-        # ==================================
-
         name = first_tag(
-
             tags,
-
             [
                 "name",
                 "official_name",
                 "short_name"
             ]
-
         )
 
-
-        # Skip unnamed records
         if not name:
 
             continue
 
-
         name = name.strip()
 
-
-        # ==================================
-        # ADDRESS
-        # ==================================
-
         address = build_address(
-
             tags,
-
             city
-
         )
 
-
-        # ==================================
-        # PHONE
-        # ==================================
-
         phone = clean_phone(
-
             first_tag(
-
                 tags,
-
                 [
                     "phone",
                     "contact:phone",
@@ -476,87 +376,47 @@ def process_results(
                     "phone:office",
                     "contact:phone:office"
                 ]
-
             )
-
         )
 
-
-        # ==================================
-        # WEBSITE
-        # ==================================
-
         website = first_tag(
-
             tags,
-
             [
                 "website",
                 "contact:website",
                 "url"
             ]
-
         )
 
-
-        # ==================================
-        # EMAIL
-        # ==================================
-
         email = first_tag(
-
             tags,
-
             [
                 "email",
                 "contact:email"
             ]
-
         )
 
-
-        # ==================================
-        # CITY
-        # ==================================
-
         business_city = first_tag(
-
             tags,
-
             [
                 "addr:city",
                 "addr:town",
                 "addr:village",
                 "addr:district"
             ]
-
         )
-
 
         if not business_city:
 
             business_city = city
 
-
-        # ==================================
-        # PINCODE
-        # ==================================
-
         pincode = first_tag(
-
             tags,
-
             [
                 "addr:postcode",
                 "postal_code"
             ]
-
         )
-
-
-        # ==================================
-        # COORDINATES
-        # ==================================
 
         latitude = element.get(
             "lat"
@@ -566,8 +426,6 @@ def process_results(
             "lon"
         )
 
-
-        # Way / relation
         if latitude is None:
 
             center = element.get(
@@ -583,35 +441,19 @@ def process_results(
                 "lon"
             )
 
-
-        # ==================================
-        # DEDUPLICATION
-        # ==================================
-
         unique_key = (
-
             normalize_text(name),
-
             normalize_text(address),
-
             normalize_text(phone)
-
         )
-
 
         if unique_key in seen:
 
             continue
 
-
         seen.add(
             unique_key
         )
-
-
-        # ==================================
-        # CREATE LEAD
-        # ==================================
 
         lead = {
 
@@ -656,15 +498,9 @@ def process_results(
 
         }
 
-
         leads.append(
             lead
         )
-
-
-        # ==================================
-        # LIMIT
-        # ==================================
 
         if limit is not None:
 
@@ -672,13 +508,8 @@ def process_results(
 
                 break
 
-
     return leads
 
-
-# ==========================================
-# EXECUTE OVERPASS
-# ==========================================
 
 def execute_overpass(
     query,
@@ -701,48 +532,29 @@ def execute_overpass(
                     f"Attempt: {attempt + 1}"
                 )
 
-
                 response = requests.post(
-
                     server,
-
                     data=query,
-
                     headers=HEADERS,
-
                     timeout=30
-
                 )
-
 
                 response.raise_for_status()
 
-
                 data = response.json()
 
-
                 leads = process_results(
-
                     data,
-
                     keyword,
-
                     city,
-
                     limit
-
                 )
-
 
                 print(
-
                     f"Found {len(leads)} businesses"
-
                 )
 
-
                 return leads
-
 
             except requests.RequestException as error:
 
@@ -751,7 +563,6 @@ def execute_overpass(
                 )
 
                 print(error)
-
 
                 if attempt == 0:
 
@@ -767,7 +578,6 @@ def execute_overpass(
                         "Trying next server..."
                     )
 
-
             except ValueError as error:
 
                 print(
@@ -778,17 +588,12 @@ def execute_overpass(
 
                 break
 
-
     print(
         "All Overpass servers failed."
     )
 
     return []
 
-
-# ==========================================
-# SEARCH BY BOUNDING BOX
-# ==========================================
 
 def search_by_bbox(
     keyword,
@@ -799,21 +604,15 @@ def search_by_bbox(
 
     south, west, north, east = bbox
 
-
     tag_filters = get_tag_filters(
         keyword
     )
 
-
     filters = "\n".join(
-
         f"nwr{tag}"
         f"({south},{west},{north},{east});"
-
         for tag in tag_filters
-
     )
-
 
     query = f"""
     [out:json][timeout:30];
@@ -825,23 +624,13 @@ def search_by_bbox(
     out center tags;
     """
 
-
     return execute_overpass(
-
         query,
-
         keyword,
-
         city,
-
         limit
-
     )
 
-
-# ==========================================
-# CITY BOUNDING BOXES
-# ==========================================
 
 CITY_BBOXES = {
 
@@ -952,10 +741,6 @@ CITY_BBOXES = {
 }
 
 
-# ==========================================
-# MAIN SEARCH FUNCTION
-# ==========================================
-
 def search_businesses(
     keyword,
     city,
@@ -966,20 +751,13 @@ def search_businesses(
         keyword or ""
     ).strip()
 
-
     city = str(
         city or ""
     ).strip()
 
-
     if not keyword or not city:
 
         return []
-
-
-    # ======================================
-    # VALIDATE LIMIT
-    # ======================================
 
     try:
 
@@ -994,89 +772,53 @@ def search_businesses(
 
         limit = 100
 
-
     if limit <= 0:
 
         limit = 100
 
-
     print(
-
         f"Searching {keyword} "
         f"in {city} "
         f"(limit={limit})..."
-
     )
 
-
     city_key = city.lower()
-
-
-    # ======================================
-    # KNOWN CITY
-    # SINGLE FAST QUERY
-    # ======================================
 
     if city_key in CITY_BBOXES:
 
         leads = search_by_bbox(
-
             keyword,
-
             city,
-
-            CITY_BBOXES[
-                city_key
-            ],
-
+            CITY_BBOXES[city_key],
             limit
-
         )
-
 
         if leads:
 
             print(
-
                 f"Final search results: "
                 f"{len(leads)}"
-
             )
-
 
             return leads
 
-
-    # ======================================
-    # AUTOMATIC CITY SEARCH
-    # ======================================
-
     print(
-
         f"Trying automatic area search "
         f"for {city}..."
-
     )
-
 
     tag_filters = get_tag_filters(
         keyword
     )
 
-
     filters = "\n".join(
-
         f'nwr{tag}(area.searchArea);'
-
         for tag in tag_filters
-
     )
-
 
     safe_city = re.escape(
         city
     )
-
 
     query = f"""
     [out:json][timeout:30];
@@ -1094,26 +836,16 @@ def search_businesses(
     out center tags;
     """
 
-
     leads = execute_overpass(
-
         query,
-
         keyword,
-
         city,
-
         limit
-
     )
-
 
     print(
-
         f"Final search results: "
         f"{len(leads)}"
-
     )
-
 
     return leads

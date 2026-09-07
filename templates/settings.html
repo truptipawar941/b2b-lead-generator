@@ -21,10 +21,6 @@
 
     <style>
 
-        /* ==========================================
-           SETTINGS PAGE
-        ========================================== */
-
         .settings-page {
             padding: 28px;
         }
@@ -166,11 +162,6 @@
             transition: opacity 0.2s ease;
         }
 
-
-        /* ==========================================
-           RESPONSIVE
-        ========================================== */
-
         @media (max-width: 900px) {
 
             .settings-grid {
@@ -204,21 +195,11 @@
 
 </head>
 
-
 <body>
-
 
 <div class="app-shell">
 
-
-    <!-- =========================================
-         SIDEBAR
-    ========================================== -->
-
     <aside class="sidebar">
-
-
-        <!-- BRAND -->
 
         <div class="sidebar-brand">
 
@@ -240,13 +221,7 @@
 
         </div>
 
-
-        <!-- NAVIGATION -->
-
         <nav class="sidebar-nav">
-
-
-            <!-- HOME -->
 
             <a
                 href="/"
@@ -263,9 +238,6 @@
 
             </a>
 
-
-            <!-- SAVED LEADS -->
-
             <a
                 href="/saved-leads"
                 class="nav-item"
@@ -281,9 +253,6 @@
 
             </a>
 
-
-            <!-- ANALYTICS -->
-
             <a
                 href="/analytics"
                 class="nav-item"
@@ -298,9 +267,6 @@
                 </span>
 
             </a>
-
-
-            <!-- DOWNLOAD HISTORY -->
 
             <a
                 href="/download-history"
@@ -319,13 +285,7 @@
 
         </nav>
 
-
-        <!-- BOTTOM -->
-
         <div class="sidebar-bottom">
-
-
-            <!-- SETTINGS -->
 
             <a
                 href="/settings"
@@ -341,9 +301,6 @@
                 </span>
 
             </a>
-
-
-            <!-- SYSTEM STATUS -->
 
             <div class="sidebar-status">
 
@@ -367,28 +324,15 @@
 
     </aside>
 
-
-
-    <!-- =========================================
-         MAIN CONTENT
-    ========================================== -->
-
     <main class="main-content">
 
-
-        <!-- =========================================
-             HEADER
-        ========================================== -->
-
         <header class="top-header">
-
 
             <div class="brand-section">
 
                 <div class="brand-icon">
                     B2B
                 </div>
-
 
                 <div>
 
@@ -404,7 +348,6 @@
 
             </div>
 
-
             <div class="header-status">
 
                 <span class="status-dot"></span>
@@ -417,21 +360,9 @@
 
         </header>
 
-
-
-        <!-- =========================================
-             SETTINGS CONTENT
-        ========================================== -->
-
         <section class="settings-page">
 
-
             <div class="settings-grid">
-
-
-                <!-- ==================================
-                     SEARCH PREFERENCES
-                ================================== -->
 
                 <section class="settings-card">
 
@@ -442,9 +373,6 @@
                     <p>
                         Configure how lead searches work.
                     </p>
-
-
-                    <!-- MAX RESULTS -->
 
                     <div class="setting-row">
 
@@ -459,7 +387,6 @@
                             </span>
 
                         </div>
-
 
                         <div class="setting-control">
 
@@ -483,9 +410,6 @@
 
                     </div>
 
-
-                    <!-- WEBSITE ENRICHMENT -->
-
                     <div class="setting-row">
 
                         <div class="setting-info">
@@ -499,7 +423,6 @@
                             </span>
 
                         </div>
-
 
                         <div class="setting-control">
 
@@ -521,12 +444,6 @@
 
                 </section>
 
-
-
-                <!-- ==================================
-                     EXPORT PREFERENCES
-                ================================== -->
-
                 <section class="settings-card">
 
                     <h3>
@@ -536,9 +453,6 @@
                     <p>
                         Choose your preferred export format.
                     </p>
-
-
-                    <!-- DEFAULT EXPORT -->
 
                     <div class="setting-row">
 
@@ -553,7 +467,6 @@
                             </span>
 
                         </div>
-
 
                         <div class="setting-control">
 
@@ -573,9 +486,6 @@
 
                     </div>
 
-
-                    <!-- FILE NAMING -->
-
                     <div class="setting-row">
 
                         <div class="setting-info">
@@ -589,7 +499,6 @@
                             </span>
 
                         </div>
-
 
                         <div class="setting-control">
 
@@ -611,12 +520,6 @@
 
                 </section>
 
-
-
-                <!-- ==================================
-                     DATA SOURCE & SYSTEM
-                ================================== -->
-
                 <section class="settings-card full-width">
 
                     <h3>
@@ -626,9 +529,6 @@
                     <p>
                         Current configuration of the lead generation pipeline.
                     </p>
-
-
-                    <!-- BUSINESS DISCOVERY -->
 
                     <div class="info-item">
 
@@ -650,9 +550,6 @@
 
                     </div>
 
-
-                    <!-- WEBSITE ENRICHMENT -->
-
                     <div class="info-item">
 
                         <div class="info-icon">
@@ -672,9 +569,6 @@
                         </div>
 
                     </div>
-
-
-                    <!-- DATABASE -->
 
                     <div class="info-item">
 
@@ -696,9 +590,6 @@
 
                     </div>
 
-
-                    <!-- RELIABILITY -->
-
                     <div class="info-item">
 
                         <div class="info-icon">
@@ -719,9 +610,6 @@
 
                     </div>
 
-
-                    <!-- SAVE -->
-
                     <div class="settings-actions">
 
                         <button
@@ -731,7 +619,6 @@
                         >
                             Save Preferences
                         </button>
-
 
                         <span
                             class="save-message"
@@ -744,28 +631,15 @@
 
                 </section>
 
-
             </div>
 
         </section>
-
 
     </main>
 
 </div>
 
-
-
-<!-- ==========================================
-     SETTINGS SCRIPT
-========================================== -->
-
 <script>
-
-
-// ==========================================
-// LOAD SETTINGS
-// ==========================================
 
 function loadSettings() {
 
@@ -774,39 +648,32 @@ function loadSettings() {
             "resultLimit"
         ) || "20";
 
-
     const enrichmentSetting =
         localStorage.getItem(
             "enrichmentSetting"
         ) || "enabled";
-
 
     const exportFormat =
         localStorage.getItem(
             "exportFormat"
         ) || "CSV";
 
-
     const fileNaming =
         localStorage.getItem(
             "fileNaming"
         ) || "standard";
 
-
     document.getElementById(
         "resultLimit"
     ).value = resultLimit;
-
 
     document.getElementById(
         "enrichmentSetting"
     ).value = enrichmentSetting;
 
-
     document.getElementById(
         "exportFormat"
     ).value = exportFormat;
-
 
     document.getElementById(
         "fileNaming"
@@ -814,17 +681,11 @@ function loadSettings() {
 
 }
 
-
-// ==========================================
-// SAVE SETTINGS
-// ==========================================
-
 document
     .getElementById("saveSettings")
     .addEventListener(
         "click",
         function () {
-
 
             localStorage.setItem(
                 "resultLimit",
@@ -833,14 +694,12 @@ document
                 ).value
             );
 
-
             localStorage.setItem(
                 "enrichmentSetting",
                 document.getElementById(
                     "enrichmentSetting"
                 ).value
             );
-
 
             localStorage.setItem(
                 "exportFormat",
@@ -849,7 +708,6 @@ document
                 ).value
             );
 
-
             localStorage.setItem(
                 "fileNaming",
                 document.getElementById(
@@ -857,15 +715,12 @@ document
                 ).value
             );
 
-
             const message =
                 document.getElementById(
                     "saveMessage"
                 );
 
-
             message.style.opacity = "1";
-
 
             setTimeout(
                 function () {
@@ -879,15 +734,9 @@ document
         }
     );
 
-
-// ==========================================
-// INITIALIZE
-// ==========================================
-
 loadSettings();
 
 </script>
-
 
 </body>
 

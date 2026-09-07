@@ -1,13 +1,5 @@
-// ==========================================
-// CURRENT SEARCH LEADS
-// ==========================================
-
 window.allLeads = [];
 
-
-// ==========================================
-// SEARCH FORM
-// ==========================================
 
 const searchForm =
     document.getElementById("searchForm");
@@ -20,20 +12,17 @@ if (searchForm) {
 
             event.preventDefault();
 
-
             const keyword =
                 document
                     .getElementById("keyword")
                     .value
                     .trim();
 
-
             const city =
                 document
                     .getElementById("city")
                     .value
                     .trim();
-
 
             if (!keyword || !city) {
 
@@ -44,22 +33,17 @@ if (searchForm) {
                 return;
             }
 
-
             const button =
                 document.getElementById(
                     "searchButton"
                 );
 
-
             button.innerText =
                 "Searching...";
-
 
             button.disabled =
                 true;
 
-
-            // Clear previous screen
             window.allLeads = [];
 
             updateStats([]);
@@ -67,7 +51,6 @@ if (searchForm) {
             updateCategoryFilter([]);
 
             displayLeads([]);
-
 
             try {
 
@@ -89,16 +72,13 @@ if (searchForm) {
                         }
                     );
 
-
                 const data =
                     await response.json();
-
 
                 console.log(
                     "Search API Response:",
                     data
                 );
-
 
                 if (
                     data.success &&
@@ -106,31 +86,25 @@ if (searchForm) {
                     data.leads.length > 0
                 ) {
 
-                    // ONLY CURRENT SEARCH
                     window.allLeads =
                         data.leads;
-
 
                     updateStats(
                         window.allLeads
                     );
 
-
                     updateCategoryFilter(
                         window.allLeads
                     );
-
 
                     displayLeads(
                         window.allLeads
                     );
 
-
                     const results =
                         document.getElementById(
                             "results"
                         );
-
 
                     if (results) {
 
@@ -138,7 +112,6 @@ if (searchForm) {
                             "block";
 
                     }
-
 
                 } else {
 
@@ -150,12 +123,10 @@ if (searchForm) {
 
                     displayLeads([]);
 
-
                     const results =
                         document.getElementById(
                             "results"
                         );
-
 
                     if (results) {
 
@@ -163,7 +134,6 @@ if (searchForm) {
                             "block";
 
                     }
-
 
                     alert(
                         data.message ||
@@ -173,14 +143,12 @@ if (searchForm) {
                     );
                 }
 
-
             } catch (error) {
 
                 console.error(
                     "Search error:",
                     error
                 );
-
 
                 window.allLeads = [];
 
@@ -190,17 +158,14 @@ if (searchForm) {
 
                 displayLeads([]);
 
-
                 alert(
                     "Something went wrong while searching."
                 );
-
 
             } finally {
 
                 button.innerText =
                     "🔍 Search Leads";
-
 
                 button.disabled =
                     false;
@@ -213,10 +178,6 @@ if (searchForm) {
 }
 
 
-// ==========================================
-// UPDATE KPI STATS
-// ==========================================
-
 function updateStats(
     leads
 ) {
@@ -224,18 +185,15 @@ function updateStats(
     const totalLeads =
         leads.length;
 
-
     const websites =
         leads.filter(
             lead => lead.website
         ).length;
 
-
     const emails =
         leads.filter(
             lead => lead.email
         ).length;
-
 
     const socialProfiles =
         leads.filter(
@@ -246,30 +204,25 @@ function updateStats(
                 lead.twitter
         ).length;
 
-
     const totalLeadsElement =
         document.getElementById(
             "totalLeads"
         );
-
 
     const totalWebsitesElement =
         document.getElementById(
             "totalWebsites"
         );
 
-
     const totalEmailsElement =
         document.getElementById(
             "totalEmails"
         );
 
-
     const totalSocialElement =
         document.getElementById(
             "totalSocial"
         );
-
 
     if (totalLeadsElement) {
 
@@ -278,7 +231,6 @@ function updateStats(
 
     }
 
-
     if (totalWebsitesElement) {
 
         totalWebsitesElement.innerText =
@@ -286,14 +238,12 @@ function updateStats(
 
     }
 
-
     if (totalEmailsElement) {
 
         totalEmailsElement.innerText =
             emails;
 
     }
-
 
     if (totalSocialElement) {
 
@@ -305,10 +255,6 @@ function updateStats(
 }
 
 
-// ==========================================
-// UPDATE CATEGORY FILTER
-// ==========================================
-
 function updateCategoryFilter(
     leads
 ) {
@@ -318,15 +264,12 @@ function updateCategoryFilter(
             "categoryFilter"
         );
 
-
     if (!categoryFilter) {
         return;
     }
 
-
     categoryFilter.innerHTML =
         '<option value="">All Categories</option>';
-
 
     const categories = [
 
@@ -346,7 +289,6 @@ function updateCategoryFilter(
 
     ];
 
-
     categories.forEach(
         function (category) {
 
@@ -355,10 +297,8 @@ function updateCategoryFilter(
                     "option"
                 );
 
-
             option.value =
                 category;
-
 
             option.textContent =
                 category
@@ -366,7 +306,6 @@ function updateCategoryFilter(
                     .toUpperCase()
                 +
                 category.slice(1);
-
 
             categoryFilter.appendChild(
                 option
@@ -378,10 +317,6 @@ function updateCategoryFilter(
 }
 
 
-// ==========================================
-// DISPLAY LEADS
-// ==========================================
-
 function displayLeads(
     leads
 ) {
@@ -391,20 +326,16 @@ function displayLeads(
             "leadTableBody"
         );
 
-
     if (!tableBody) {
         return;
     }
 
-
     tableBody.innerHTML = "";
-
 
     const leadCount =
         document.getElementById(
             "leadCount"
         );
-
 
     if (leadCount) {
 
@@ -413,14 +344,12 @@ function displayLeads(
 
     }
 
-
     if (leads.length === 0) {
 
         const row =
             document.createElement(
                 "tr"
             );
-
 
         row.innerHTML = `
             <td
@@ -435,15 +364,12 @@ function displayLeads(
             </td>
         `;
 
-
         tableBody.appendChild(
             row
         );
 
-
         return;
     }
-
 
     leads.forEach(
         function (lead) {
@@ -453,14 +379,8 @@ function displayLeads(
                     "tr"
                 );
 
-
-            // ==================================
-            // RELIABILITY
-            // ==================================
-
             let reliabilityHTML =
                 "-";
-
 
             if (
                 lead.reliability_score !==
@@ -472,7 +392,6 @@ function displayLeads(
 
                 let badgeClass =
                     "low";
-
 
                 if (
                     lead.reliability_status ===
@@ -493,7 +412,6 @@ function displayLeads(
                         "medium";
 
                 }
-
 
                 reliabilityHTML = `
                     <span
@@ -520,11 +438,6 @@ function displayLeads(
 
             }
 
-
-            // ==================================
-            // HIGH RELIABILITY ROW
-            // ==================================
-
             if (
                 lead.reliability_status ===
                 "HIGH"
@@ -536,14 +449,7 @@ function displayLeads(
 
             }
 
-
-            // ==================================
-            // TABLE ROW
-            // ==================================
-
             row.innerHTML = `
-
-                <!-- BUSINESS -->
 
                 <td>
                     ${
@@ -552,18 +458,12 @@ function displayLeads(
                     }
                 </td>
 
-
-                <!-- CATEGORY -->
-
                 <td>
                     ${
                         lead.category
                         || "-"
                     }
                 </td>
-
-
-                <!-- ADDRESS -->
 
                 <td>
                     ${
@@ -572,18 +472,12 @@ function displayLeads(
                     }
                 </td>
 
-
-                <!-- CITY -->
-
                 <td>
                     ${
                         lead.city
                         || "-"
                     }
                 </td>
-
-
-                <!-- PINCODE -->
 
                 <td>
                     ${
@@ -592,18 +486,12 @@ function displayLeads(
                     }
                 </td>
 
-
-                <!-- PHONE -->
-
                 <td>
                     ${
                         lead.phone
                         || "-"
                     }
                 </td>
-
-
-                <!-- WEBSITE -->
 
                 <td>
 
@@ -627,18 +515,12 @@ function displayLeads(
 
                 </td>
 
-
-                <!-- EMAIL -->
-
                 <td>
                     ${
                         lead.email
                         || "-"
                     }
                 </td>
-
-
-                <!-- INSTAGRAM -->
 
                 <td>
 
@@ -662,9 +544,6 @@ function displayLeads(
 
                 </td>
 
-
-                <!-- FACEBOOK -->
-
                 <td>
 
                     ${
@@ -686,9 +565,6 @@ function displayLeads(
                     }
 
                 </td>
-
-
-                <!-- LINKEDIN -->
 
                 <td>
 
@@ -712,9 +588,6 @@ function displayLeads(
 
                 </td>
 
-
-                <!-- TWITTER -->
-
                 <td>
 
                     ${
@@ -737,18 +610,12 @@ function displayLeads(
 
                 </td>
 
-
-                <!-- RATING -->
-
                 <td>
                     ${
                         lead.rating
                         || "-"
                     }
                 </td>
-
-
-                <!-- REVIEWS -->
 
                 <td>
                     ${
@@ -757,15 +624,9 @@ function displayLeads(
                     }
                 </td>
 
-
-                <!-- RELIABILITY -->
-
                 <td>
                     ${reliabilityHTML}
                 </td>
-
-
-                <!-- MISSING INFO -->
 
                 <td>
                     ${
@@ -773,9 +634,6 @@ function displayLeads(
                         || "None"
                     }
                 </td>
-
-
-                <!-- GOOGLE MAPS -->
 
                 <td>
 
@@ -801,7 +659,6 @@ function displayLeads(
 
             `;
 
-
             tableBody.appendChild(
                 row
             );
@@ -809,16 +666,10 @@ function displayLeads(
         }
     );
 
-
-    // ==================================
-    // RESET HORIZONTAL SCROLL
-    // ==================================
-
     const tableContainer =
         document.querySelector(
             ".table-container"
         );
-
 
     if (tableContainer) {
 
@@ -830,10 +681,6 @@ function displayLeads(
 }
 
 
-// ==========================================
-// FILTER LEADS
-// ==========================================
-
 function filterLeads() {
 
     const searchInput =
@@ -841,31 +688,25 @@ function filterLeads() {
             "leadSearch"
         );
 
-
     const categoryInput =
         document.getElementById(
             "categoryFilter"
         );
 
-
     if (!searchInput || !categoryInput) {
         return;
     }
-
 
     const searchText =
         searchInput.value
             .toLowerCase()
             .trim();
 
-
     const category =
         categoryInput.value;
 
-
     const allLeads =
         window.allLeads || [];
-
 
     const filteredLeads =
         allLeads.filter(
@@ -877,19 +718,16 @@ function filterLeads() {
                         || ""
                     ).toLowerCase();
 
-
                 const matchesSearch =
                     businessName.includes(
                         searchText
                     );
-
 
                 const matchesCategory =
                     !category
                     ||
                     lead.category ===
                         category;
-
 
                 return (
                     matchesSearch
@@ -900,7 +738,6 @@ function filterLeads() {
             }
         );
 
-
     displayLeads(
         filteredLeads
     );
@@ -908,15 +745,10 @@ function filterLeads() {
 }
 
 
-// ==========================================
-// SEARCH FILTER
-// ==========================================
-
 const leadSearch =
     document.getElementById(
         "leadSearch"
     );
-
 
 if (leadSearch) {
 
@@ -928,15 +760,10 @@ if (leadSearch) {
 }
 
 
-// ==========================================
-// CATEGORY FILTER
-// ==========================================
-
 const categoryFilter =
     document.getElementById(
         "categoryFilter"
     );
-
 
 if (categoryFilter) {
 
@@ -948,15 +775,10 @@ if (categoryFilter) {
 }
 
 
-// ==========================================
-// CLEAR FILTERS
-// ==========================================
-
 const clearFilters =
     document.getElementById(
         "clearFilters"
     );
-
 
 if (clearFilters) {
 
@@ -971,14 +793,12 @@ if (clearFilters) {
 
             }
 
-
             if (categoryFilter) {
 
                 categoryFilter.value =
                     "";
 
             }
-
 
             displayLeads(
                 window.allLeads || []
@@ -990,15 +810,10 @@ if (clearFilters) {
 }
 
 
-// ==========================================
-// EXPORT CSV
-// ==========================================
-
 const exportCsv =
     document.getElementById(
         "exportCsv"
     );
-
 
 if (exportCsv) {
 
@@ -1009,7 +824,6 @@ if (exportCsv) {
             const leads =
                 window.allLeads || [];
 
-
             if (!leads.length) {
 
                 alert(
@@ -1019,18 +833,15 @@ if (exportCsv) {
                 return;
             }
 
-
             const keyword =
                 document.getElementById(
                     "keyword"
                 ).value.trim();
 
-
             const city =
                 document.getElementById(
                     "city"
                 ).value.trim();
-
 
             try {
 
@@ -1062,7 +873,6 @@ if (exportCsv) {
                         }
                     );
 
-
                 if (!response.ok) {
 
                     throw new Error(
@@ -1071,46 +881,36 @@ if (exportCsv) {
 
                 }
 
-
                 const blob =
                     await response.blob();
-
 
                 const url =
                     window.URL.createObjectURL(
                         blob
                     );
 
-
                 const link =
                     document.createElement(
                         "a"
                     );
 
-
                 link.href =
                     url;
 
-
                 link.download =
                     "b2b_leads.csv";
-
 
                 document.body.appendChild(
                     link
                 );
 
-
                 link.click();
 
-
                 link.remove();
-
 
                 window.URL.revokeObjectURL(
                     url
                 );
-
 
             } catch (error) {
 
@@ -1118,7 +918,6 @@ if (exportCsv) {
                     "CSV export error:",
                     error
                 );
-
 
                 alert(
                     "Unable to export CSV."
@@ -1132,15 +931,10 @@ if (exportCsv) {
 }
 
 
-// ==========================================
-// EXPORT EXCEL
-// ==========================================
-
 const exportExcel =
     document.getElementById(
         "exportExcel"
     );
-
 
 if (exportExcel) {
 
@@ -1151,7 +945,6 @@ if (exportExcel) {
             const leads =
                 window.allLeads || [];
 
-
             if (!leads.length) {
 
                 alert(
@@ -1161,18 +954,15 @@ if (exportExcel) {
                 return;
             }
 
-
             const keyword =
                 document.getElementById(
                     "keyword"
                 ).value.trim();
 
-
             const city =
                 document.getElementById(
                     "city"
                 ).value.trim();
-
 
             try {
 
@@ -1204,7 +994,6 @@ if (exportExcel) {
                         }
                     );
 
-
                 if (!response.ok) {
 
                     throw new Error(
@@ -1213,46 +1002,36 @@ if (exportExcel) {
 
                 }
 
-
                 const blob =
                     await response.blob();
-
 
                 const url =
                     window.URL.createObjectURL(
                         blob
                     );
 
-
                 const link =
                     document.createElement(
                         "a"
                     );
 
-
                 link.href =
                     url;
 
-
                 link.download =
                     "b2b_leads.xlsx";
-
 
                 document.body.appendChild(
                     link
                 );
 
-
                 link.click();
 
-
                 link.remove();
-
 
                 window.URL.revokeObjectURL(
                     url
                 );
-
 
             } catch (error) {
 
@@ -1260,7 +1039,6 @@ if (exportExcel) {
                     "Excel export error:",
                     error
                 );
-
 
                 alert(
                     "Unable to export Excel."
@@ -1272,9 +1050,7 @@ if (exportExcel) {
     );
 
 }
-// ==========================================
-// MONITOR BACKGROUND ENRICHMENT
-// ==========================================
+
 
 async function monitorEnrichment(jobId) {
 
@@ -1292,8 +1068,6 @@ async function monitorEnrichment(jobId) {
                 return;
             }
 
-
-            // Update current leads
             if (data.leads) {
 
                 window.allLeads =
@@ -1312,8 +1086,6 @@ async function monitorEnrichment(jobId) {
                 );
             }
 
-
-            // Continue until complete
             if (
                 data.status === "queued" ||
                 data.status === "running"
@@ -1343,8 +1115,5 @@ async function monitorEnrichment(jobId) {
         }
     };
 
-
     poll();
 }
-
-
